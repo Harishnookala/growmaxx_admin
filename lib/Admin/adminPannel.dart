@@ -24,7 +24,6 @@ class adminPannelState extends State<adminPannel>{
   adminPannelState({this.phonenumber});
   @override
   Widget build(BuildContext context) {
-    print(widget.selectedPage);
     // TODO: implement build
     return DefaultTabController(
       initialIndex: widget.selectedPage!,
