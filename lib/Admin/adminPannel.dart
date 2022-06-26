@@ -4,6 +4,7 @@ import 'package:growmaxx_admin/Admin/profit&loss.dart';
 
 import '../Admin/Home.dart';
 import 'Users.dart';
+import 'drawer.dart';
 import 'funds.dart';
 
 class adminPannel extends StatefulWidget{
@@ -30,7 +31,7 @@ class adminPannelState extends State<adminPannel>{
       length: 4,
       child: Scaffold(
         drawer: Drawer(
-          child: Text("ha"),
+          child:build_drawer(),
         ),
         appBar:  AppBar(
           bottom:  PreferredSize(
