@@ -5,7 +5,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:growmaxx_admin/repositories/authentication.dart';
+import 'package:growmaxx_admin/Admin/adminPannel.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Pan_deatils extends StatefulWidget {
@@ -29,79 +30,94 @@ class _Pan_deatilsState extends State<Pan_deatils> {
   File?image_path;
   String?selected_value;
   List proof = ["Aadhar","Voter","Driving","Passport"];
+  Authentication authentication = Authentication();
+  final formKey = GlobalKey<FormState>();
+ bool inprogress = false;
   @override
   Widget build(BuildContext context) {
+    print(widget.Ifsc);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
-          margin: EdgeInsets.all(5.3),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              SizedBox(
-                height: 8,
-              ),
-              Divider(height: 1, thickness: 1.5, color: Colors.green.shade400),
-              Container(
-                  margin: EdgeInsets.only(
-                      left: 14.3, right: 15.3, bottom: 4.3),
-                  child: Text(
-                    "Pan Details",
-                    style: TextStyle(
-                        color: Colors.deepOrange,
-                        fontSize: 16,
-                        fontFamily: "Poppins-Medium"),
-                  )),
-              Divider(height: 1, thickness: 1.5, color: Colors.green.shade400),
-              Container(
-                margin: EdgeInsets.only(left: 12.3,top: 12.3),
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  children: [
-                    Container(
-                      child: const Text(
-                        "Pan Number : -",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.purple,
-                            letterSpacing: 0.6,
-                            fontFamily: "Poppins-Light"),
-                      ),
-                      margin: const EdgeInsets.only(bottom: 8.5),
-                    ),
-                    build_panNumber(),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      child: const Text(
-                        "Pan Photo : -",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            color: Colors.purple,
-                            letterSpacing: 0.6,
-                            fontFamily: "Poppins-Light"),
-                      ),
-                      margin: const EdgeInsets.only(bottom: 8.5),
-                    ),
-                    SizedBox(height: 20,),
-                    Center(child:buildPanPhoto() ,),
-                    SizedBox(height: 20,),
-                   SizedBox(
-                     width: 120,
-                     child: build_proof(),
-                   ),
-                   SizedBox(height: 10,),
-                    build_identityProof(),
-                    SizedBox(height: 10,),
-                    build_button(),
-                    SizedBox(height: 10,),
-                  ],
+          margin: EdgeInsets.all(15.3),
+          child: Form(
+           key: formKey,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                SizedBox(
+                  height: 8,
                 ),
-              ),
-            ],
+                Divider(height: 1, thickness: 1.5, color: Colors.green.shade400),
+                Container(
+                    margin: EdgeInsets.only(
+                        left: 14.3, right: 15.3, bottom: 4.3),
+                    child: Text(
+                      "Pan Details",
+                      style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontSize: 16,
+                          fontFamily: "Poppins-Medium"),
+                    )),
+                Divider(height: 1, thickness: 1.5, color: Colors.green.shade400),
+                Container(
+                  margin: EdgeInsets.only(left: 12.3,top: 12.3),
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    children: [
+                      Container(
+                        child: const Text(
+                          "Pan Number : -",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.purple,
+                              letterSpacing: 0.6,
+                              fontFamily: "Poppins-Light"),
+                        ),
+                        margin: const EdgeInsets.only(bottom: 8.5),
+                      ),
+                      build_panNumber(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        child: const Text(
+                          "Pan Photo : -",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.purple,
+                              letterSpacing: 0.6,
+                              fontFamily: "Poppins-Light"),
+                        ),
+                        margin: const EdgeInsets.only(bottom: 8.5),
+                      ),
+                      SizedBox(height: 20,),
+                      Center(child:buildPanPhoto() ,),
+                      SizedBox(height: 20,),
+                     SizedBox(
+                       width: 120,
+                       child: build_proof(),
+                     ),
+                     SizedBox(height: 10,),
+                      build_identityProof(),
+                      SizedBox(height: 10,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                         build_button(),
+                         inprogress?Padding(padding: EdgeInsets.only(left: 12.3),
+                          child: CircularProgressIndicator(),
+                         ):Container()
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -111,15 +127,23 @@ class _Pan_deatilsState extends State<Pan_deatils> {
   build_panNumber() {
     return Container(
       child: SizedBox(
-        height: 53,
-        width: 30,
+
         //width: MediaQuery.of(context).size.width / 1.2,
         child: TextFormField(
           style: const TextStyle(
             fontFamily: "Poppins-Light",
           ),
+
           controller: panNumberController,
+          validator: (value) {
+            if (value == null || value.isEmpty||value.length!=10) {
+              return 'Please enter Pan number';
+            }
+            return null;
+          },
           decoration: InputDecoration(
+              contentPadding:  EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+
               focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.tealAccent, width: 1.8),
               ),
@@ -193,6 +217,7 @@ class _Pan_deatilsState extends State<Pan_deatils> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
+        image =  authentication.bank_details(imageFile, name);
       });
     }
   }
@@ -207,22 +232,38 @@ class _Pan_deatilsState extends State<Pan_deatils> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.6)),
 
         ),
-        onPressed: () async{
-           image = await image;
-           imageurl = await imageurl;
-           Map<String,dynamic> data ={
-             "accountnumber":widget.accountnumber,
-             "ifsc":widget.Ifsc,
-             "phonenumber":widget.phonenumber,
-             "pannumber": panNumberController.text,
-             "image":image,
-             "validationproof":imageurl,
-             "proof":selected_value,
-             "status":"pending",
-           };
-           var bank_details = await FirebaseFirestore.instance.collection("bank_details").doc(widget.phonenumber).set(data);
+        onPressed: () async {
+          image = await image;
+          imageurl = await imageurl;
 
-           },
+          if (formKey.currentState!.validate()) {
+            if (image != null && imageurl != null && selected_value != null) {
+
+              Map<String, dynamic> data = {
+                "accountnumber": widget.accountnumber,
+                "ifsc": widget.Ifsc,
+                "phonenumber": widget.phonenumber,
+                "pannumber": panNumberController.text,
+                "image": image,
+                "validationproof": imageurl,
+                "proof": selected_value,
+                "status": "pending",
+              };
+              setState(() {
+                inprogress = true;
+              });
+              var bank_details = await FirebaseFirestore.instance.collection(
+                  "bank_details").doc(widget.phonenumber).set(data);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>
+                    adminPannel(
+                     selectedPage: 0,
+                    )),
+              );
+            }
+          }
+        },
         child: Container(
             margin: EdgeInsets.only(left: 5.3,right: 5.3),
             child: Text("Save & Continue",style: TextStyle(color: Colors.white,fontFamily: "Poppins-Medium"),)),
@@ -276,6 +317,7 @@ class _Pan_deatilsState extends State<Pan_deatils> {
     if (pickedFile != null) {
       setState(() {
         image_path = File(pickedFile.path);
+        imageurl =  authentication.proofs(image_path,proof,name);
       });
     }
   }
@@ -293,6 +335,7 @@ class _Pan_deatilsState extends State<Pan_deatils> {
     if (pickedFile != null) {
       setState(() {
         image_path = File(pickedFile.path);
+        imageurl =  authentication.proofs(image_path,proof,name);
 
       });
     }
@@ -469,6 +512,7 @@ class _Pan_deatilsState extends State<Pan_deatils> {
     if (pickedFile != null) {
       setState(() {
         imageFile = File(pickedFile.path);
+        image =  authentication.bank_details(imageFile, name);
       });
     }
   }

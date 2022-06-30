@@ -52,7 +52,8 @@ dependencies:
   shared_preferences: ^2.0.6
   flutter_simple_dependency_injection: ^2.0.0
   back_button_interceptor: ^6.0.0
-
+  external_path: ^1.0.1
+  csv: ^5.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

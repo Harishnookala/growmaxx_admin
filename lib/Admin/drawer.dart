@@ -1,6 +1,7 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/user_details.dart';
+import 'package:growmaxx_admin/Forms/personal_details.dart';
 class build_drawer extends StatefulWidget {
    build_drawer({Key? key}) : super(key: key);
 
@@ -43,6 +44,17 @@ class _build_draweState extends State<build_drawer> {
               );
             },
             child: Text("Users"),
+          ),
+        ),
+        Container(
+          child: TextButton(
+            onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  personal_details()),
+              );
+            },
+            child: Text(" +  Create Account"),
           ),
         )
       ],

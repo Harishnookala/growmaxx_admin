@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:csv/csv.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:external_path/external_path.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/requestInvestments.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -26,13 +32,14 @@ class _HomeState extends State<Home> {
   FirebaseFirestore.instance.collection("requestInvestments").snapshots();
   var requestWithdrawls =
   FirebaseFirestore.instance.collection("requestwithdrawls").snapshots();
-
+ List transactions =[];
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 12.3),
       child: ListView(
         shrinkWrap: true,
+        physics: ScrollPhysics(),
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -61,7 +68,7 @@ class _HomeState extends State<Home> {
                         double total = 0.0;
                         if (snap.hasData && snap.requireData.docs.length > 0) {
                           var investments = snap.data;
-                          total = get_total(investments, total);
+                          total = get_total(investments);
                           return Container(
                             child: Text(total.toString(),
                               style: TextStyle(color: Colors.blue),),
@@ -88,8 +95,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  get_total(QuerySnapshot<Object?>? investments, double total) {
-    var amount;
+  get_total(QuerySnapshot<Object?>? investments) {
+    var total = 0.0;
     for (int i = 0; i < investments!.docs.length; i++) {
       total = total + double.parse(investments.docs[i].get("InvestAmount"));
     }
@@ -127,7 +134,7 @@ class _HomeState extends State<Home> {
                             await showDateRangePicker(
                               context: context,
                               firstDate: DateTime(2022),
-                              lastDate: DateTime.now(),
+                              lastDate: DateTime.now().add(const Duration(days: 1)),
                             );
                             setState(() {
                               start = dateTimeRange!.start;
@@ -181,9 +188,27 @@ class _HomeState extends State<Home> {
               ],
             ),
             Divider(color: Colors.grey,),
-            Container(
-              child: get_alltransactions(),
-            )
+            ListView(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              children: [
+                get_alltransactions(),
+              ],
+            ),
+            start!=null?Container(
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.deepOrange.shade400,
+                    elevation: 0.6,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.3)),
+                    minimumSize: Size(120, 30)
+                  ),
+                onPressed: () async{
+                   get_data(transactions);
+                },
+                child: Text("Download",style: TextStyle(color: Colors.white),),
+              ),
+            ):Container(),
           ],
         ) : Container(),
       ],
@@ -283,7 +308,8 @@ class _HomeState extends State<Home> {
       builder: (context, snap) {
         if (snap.hasData) {
           List<QueryDocumentSnapshot> userinvestments = snap.data!.docs;
-          return StreamBuilder<QuerySnapshot>(
+
+          return start!=null? StreamBuilder<QuerySnapshot>(
             stream: requestWithdrawls,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -291,9 +317,10 @@ class _HomeState extends State<Home> {
                 userinvestments.addAll(userwithdrawls);
                 List selected_dates = getDaysInBetween(start!, end_date!);
                 List dates = get_dates(userinvestments, selectedValue);
-                List transactions = get_transactions(dates, selectedValue, selected_dates, userinvestments);
+                transactions = get_transactions(dates, selectedValue, selected_dates, userinvestments);
                 return Container(
                   child: ListView.builder(
+                    physics: ScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: transactions.length,
                       padding: EdgeInsets.zero,
@@ -330,7 +357,7 @@ class _HomeState extends State<Home> {
               }
               return Container();
             },
-          );
+          ): Container();
         }
         return CircularProgressIndicator();
       },
@@ -433,5 +460,37 @@ class _HomeState extends State<Home> {
     }
      return all_transactions;
   }
+
+get_data(List transactions) async {
+
+  Map<Permission, PermissionStatus> statuses = await [
+  Permission.storage,
+  ].request();
+  List<List<dynamic>> rows = [];
+  List<dynamic> row  =[];
+   row.add("Date");
+   row.add("phonenumber");
+   row.add("Amount");
+  rows.add(row);
+   for(int i=0;i<transactions.length;i++){
+     List<dynamic> row  =[];
+    row.add(transactions[i][0]);
+    row.add(transactions[i][1]);
+    row.add(transactions[i][2][0] + transactions[i][3]);
+    rows.add(row);
+   }
+  String? csv =  ListToCsvConverter().convert(rows);
+  String dir;
+
+  dir = await ExternalPath.getExternalStoragePublicDirectory(
+      ExternalPath.DIRECTORY_DOWNLOADS);
+  print("dir $dir");
+  String file = "$dir";
+   print(file);
+  File f = File(file + "/transactions.csv");
+
+  f.writeAsString(csv);
+
+}
 
 }

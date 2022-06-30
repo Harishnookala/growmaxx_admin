@@ -34,6 +34,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
           builder: (context, snapshot) {
             if(snapshot.hasData){
               var bank_details = snapshot.data;
+
               return ListView(
                 shrinkWrap: true,
                 children: [
@@ -76,7 +77,17 @@ class _BankingrequestsState extends State<Bankingrequests> {
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text("Account number  :  - "),
-                                        Text(bank_details.get("accountnumber"))
+                                        Text(bank_details.get("accountnumber").toString())
+                                      ],
+                                    ),
+                                    SizedBox(height: 15,),
+
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text("Ifsc  :  - "),
+                                        Text(bank_details.get("ifsc").toString())
                                       ],
                                     ),
                                     SizedBox(height: 15,),
@@ -85,7 +96,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text("Pan number  :  - "),
-                                        Text(bank_details.get("pannumber"))
+                                        Text(bank_details.get("pannumber").toString())
                                       ],
                                     ),
                                     SizedBox(height: 15,),

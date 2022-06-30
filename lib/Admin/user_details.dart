@@ -23,11 +23,13 @@ class _user_detailsState extends State<user_details> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 25,),
-                IconButton(onPressed: (){
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          adminPannel(selectedPage: 0,)));
-                }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 22,color: Colors.lightBlueAccent,)),
+                Container(
+                  child: IconButton(onPressed: (){
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            adminPannel(selectedPage: 0,)));
+                  }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 22,color: Colors.lightBlueAccent,)),
+                ),
                 Divider(
                     height: 1, thickness: 1.5, color: Colors.green.shade400),
                 Container(

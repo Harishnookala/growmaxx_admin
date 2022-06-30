@@ -18,7 +18,7 @@ class _requestInvestmentsState extends State<requestInvestments> {
   int pressedrejectd = -1;
   @override
   Widget build(BuildContext context) {
-    TimeOfDay endTime = const TimeOfDay(hour: 15, minute: 59);
+    TimeOfDay endTime = const TimeOfDay(hour: 22, minute:59 );
     TimeOfDay now = TimeOfDay.now();
     double running_time = now.hour.toDouble() + (now.minute.toDouble() / 60);
     double closing_time =
@@ -95,7 +95,7 @@ class _requestInvestmentsState extends State<requestInvestments> {
                 ),
               );
             }
-            return Container();
+            return CircularProgressIndicator();
           },
         )
       ],
@@ -128,13 +128,16 @@ class _requestInvestmentsState extends State<requestInvestments> {
                         if (investid == null) {
                           Map<String, dynamic> investment = {
                             "InvestAmount": amount,
-                            "phonenumber": investments[index].get("phonenumber")
+                            "phonenumber": investments[index].get("phonenumber"),
+                            "CreatedAt" : DateTime.now(),
                           };
                           await FirebaseFirestore.instance
                               .collection("Investments")
                               .doc(investments[index].get("phonenumber"))
                               .set(investment);
-                        } else {
+                        }
+
+                        else {
                           var InvestAmount = await get_data(
                               investid, investments[index].get("phonenumber"));
                           print(InvestAmount);
@@ -143,6 +146,7 @@ class _requestInvestmentsState extends State<requestInvestments> {
                           var investAmount = savingAmount.toString();
                           Map<String, dynamic> investedAmount = {
                             "InvestAmount": investAmount.toString(),
+                            "CreatedAt" : DateTime.now(),
                           };
                           await FirebaseFirestore.instance
                               .collection("Investments")

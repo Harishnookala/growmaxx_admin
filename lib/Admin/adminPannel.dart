@@ -34,6 +34,7 @@ class adminPannelState extends State<adminPannel>{
           child:build_drawer(),
         ),
         appBar:  AppBar(
+          backgroundColor: Colors.deepOrange.shade500,
           bottom:  PreferredSize(
             preferredSize:  const Size.fromHeight(5),
             child:  ListView(
@@ -42,19 +43,22 @@ class adminPannelState extends State<adminPannel>{
                 tabs: [
                   Row(
                     children: [
-                      new Container(
-                        child: new Tab(text: 'Home'),
+                      Container(
+                        child: new Tab(child: Text("Home"),),
                       ),
                     ],
                   ),
                   Container(
-                    child: new Tab(text: 'Funds'),
+                    width: 80,
+                    child: new Tab(child: Text("Funds"),),
                   ),
                   Container(
-                    child: new Tab(text: 'profit&loss'),
+
+                    child: new Tab(child: Text("profit & loss"),),
                   ),
                   Container(
-                    child: new Tab(text: 'Requests'),
+
+                    child: new Tab(child: Text(" Bank Request"),),
                   ),
                 ],
               ),],

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'adminPannel.dart';
 class profit extends StatefulWidget {
   const profit({Key? key}) : super(key: key);
 
@@ -13,6 +15,8 @@ class _profitState extends State<profit> {
   var plus_button = false;
   var minu_button = false;
   var pressed =false;
+  bool inprogress = false;
+  TextEditingController percentageController = TextEditingController();
   @override
   Widget build(BuildContext context) {
 
@@ -20,81 +24,17 @@ class _profitState extends State<profit> {
       margin: EdgeInsets.all(12.3),
       child: Column(
         children:  [
+          SizedBox(height: 10,),
           Text("Today Profits",style: TextStyle(color: Colors.pinkAccent),),
           Divider(thickness: 0.6,color: Colors.black,),
           Container(
+            margin: EdgeInsets.symmetric(vertical: 15),
             child: Row(
               children: [
-                SizedBox(height: 60,),
                 Text("Today Status :"),
                 Container(
-                  margin: EdgeInsets.only(left: 20.3),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 35,
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                  backgroundColor: Color(0xfff4deac),
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(color: Color(0xfff4deac)),
-                                    borderRadius:
-                                    BorderRadius.circular(25.0),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    plus_button = true;
-                                    if(plus_button){
-                                      get_increment();
-                                    }
-                                  });
-                                },
-                                child: Text(" + ", style: TextStyle(
-                                    color: Colors.black),
-                                )),
-                          ),
-                          Container(
-                              margin: EdgeInsets.only(
-                                  left: 5.3,
-                                  right: 5.3),
-                              child: Text(
-                                count.toString(),
-                                style: TextStyle(fontSize: 16),
-                              )),
-                          SizedBox(
-                            height: 35,
-                            child: TextButton(
-                                style: TextButton.styleFrom(
-                                  backgroundColor:
-                                  Color(0xfff4deac),
-                                  shape: RoundedRectangleBorder(
-                                    side: BorderSide(color: Color(0xfff4deac)),
-                                    borderRadius: BorderRadius.circular(25.0),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    get_decrement();
-                                  });
-                                },
-                                child: Container(
-                                    alignment: Alignment.topLeft,
-                                    child: const Text("-", style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 16),
-                                    ))),
-                          ),
-                        ],
-                      ),
-
-                    ],
-                  ),
+                  margin: EdgeInsets.only(left: 18.3),
+                  child: build_percentage(),
                 ),
 
               ],
@@ -104,28 +44,45 @@ class _profitState extends State<profit> {
             child: Center(
               child: TextButton(
                 style: TextButton.styleFrom(
-                  minimumSize: Size(120, 30),
+                  minimumSize: Size(130, 3),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.3)),
                     backgroundColor: Colors.green.shade400),
                 onPressed: ()async{
-                  var dates = DateFormat('yyy-dd-MMM').format(DateTime.now());
-                  Map<String,dynamic>data ={
-                    "CreatedAt":DateTime.now(),
-                    "Todayprofit":count.toString()
-                  };
-                  await FirebaseFirestore.instance.collection("Admin").doc(dates).set(data);
+                   if(percentageController.text!=null){
+                     setState(() {
+                       inprogress =true;
+                     });
+                     var dates = DateFormat('yyy-dd-MMM').format(DateTime.now());
+                     Map<String,dynamic>data ={
+                       "CreatedAt":DateTime.now(),
+                       "Todayprofit":percentageController.text.toString()
+                     };
+                     await FirebaseFirestore.instance.collection("Admin").doc(dates).set(data);
 
-                  var investments = await get_data();
+                     var investments = await get_data();
 
-                  setState(() {
-                    pressed =true;
-                    count=0;
-                    pressed =false;
-                   });
+                     setState(() {
+                       pressed =true;
+                       count=0;
+                       pressed =false;
+                     });
 
+                   }
                 },
-                child: Text("Submit",
-                style: TextStyle(color: Colors.white),),
+                child: Container(
+                  width:MediaQuery.of(context).size.width/2.87,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10,),
+                      Center(
+                        child: Text("Submit",textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white,fontSize: 16),),
+                      ),
+                      inprogress?CircularProgressIndicator():Container(),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -135,15 +92,6 @@ class _profitState extends State<profit> {
     );
   }
 
-   get_increment() {
-      if(plus_button){
-        count++;
-      }
-  }
-
-   get_decrement() {
-    count--;
-   }
 
   get_data() async{
     NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
@@ -152,28 +100,61 @@ class _profitState extends State<profit> {
     var collection = await FirebaseFirestore.instance.collection("Investments").get();
     for(int i=0;i<collection.docs.length;i++){
       var investAmount = collection.docs[i].get("InvestAmount");
-      var percentageAmount = (double.parse(investAmount)*count)/100;
+      var percentageAmount = (double.parse(investAmount)*double.parse(percentageController.text))/100;
       String fixestwo = percentageAmount.toStringAsFixed(2);
       double profit = double.parse(fixestwo);
-      if(count.isNegative){
+      if(double.parse(percentageController.text).isNegative){
          amount = double.parse(investAmount) - profit.abs();
        }
         else{
            amount = double.parse(investAmount) + profit;
         }
-      print(amount);
-      print(investAmount);
-      print(profit);
+        String afterprofit = amount.toStringAsFixed(2);
+        String beforeprofit =  double.parse(investAmount).toStringAsFixed(2);
        Map<String,dynamic>data = {
-          "InvestAmount":amount.toString(),
-          "beforepercentage":investAmount.toString(),
-        };
-        Map<String,dynamic> gains = {
-          "CurrentGains":profit.toString()
-        };
-
-      await FirebaseFirestore.instance.collection("Investments").doc(collection.docs[i].id.toString()).update(data);
-      await FirebaseFirestore.instance.collection("currentgains").doc(collection.docs[i].id.toString()).update(gains);
+          "InvestAmount":afterprofit.toString(),
+          "beforepercentage":beforeprofit.toString(),
+       };
+      var dates = DateFormat('yyy-dd-MMM').format(DateTime.now());
+      Map<String,dynamic>gains ={
+        "CreatedAt":DateTime.now(),
+        "CurrentGains":profit.toString()
+      };
+      await FirebaseFirestore.instance.collection("Current_gains").doc(collection.docs[i].id.toString()).set(gains);
+       FirebaseFirestore.instance.collection("Investments").doc(collection.docs[i].id.toString()).update(data);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => adminPannel(selectedPage: 0)));
     }
+  }
+
+  build_percentage() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width/2.0,
+      height: 54,
+      child: TextFormField(
+        textAlign: TextAlign.left,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.tealAccent, width: 1.8),
+            ),
+            hintText: "percentage",
+            labelText: "Profit",
+            labelStyle: const TextStyle(color: Color(0xff576630)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4.5),
+            ),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xcc9fce4c), width: 1.5),
+            ),
+            hintStyle: const TextStyle(color: Colors.brown)),
+        controller:percentageController,
+        cursorColor: Colors.orange,
+        style: const TextStyle(
+           letterSpacing: 0.5,
+            color: Colors.deepPurpleAccent,fontSize: 16,fontFamily: "poppins-Medium"),
+      ),
+    );
   }
 }

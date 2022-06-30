@@ -106,18 +106,12 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
                 accepted = true;
               });
               if (accepted == true) {
-                var id = withdrawl[index].id;
-                Map<String, dynamic> data = {"status": "Accept"};
-
-                await FirebaseFirestore.instance
-                    .collection("requestwithdrawls")
-                    .doc(id)
-                    .update(data);
                 var saving_amount = await get_invests(withdrawl[index]);
 
-                var withdrawlamount = int.parse(saving_amount) -
-                    int.parse(withdrawl[index].get("InvestAmount"));
-
+                var withdrawlamount =
+              double.parse(saving_amount) -
+                    double.parse(withdrawl[index].get("InvestAmount"));
+                print(withdrawlamount);
                 Map<String, dynamic> updateamount = {
                   "InvestAmount": withdrawlamount.toString(),
                 };
@@ -126,6 +120,13 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
                     .doc(withdrawl[index].get("phonenumber"))
                     .update(updateamount);
               }
+              Map<String, dynamic> data = {"status": "Accept"};
+              var id = withdrawl[index].id;
+
+              await FirebaseFirestore.instance
+                  .collection("requestwithdrawls")
+                  .doc(id)
+                  .update(data);
             },
             child:
                 pressedaccepted == index ? Text("Accepted") : Text("Accept")),

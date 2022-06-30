@@ -56,12 +56,13 @@ class _UsersState extends State<Users> {
               builder: (context, snap) {
                 if (snap.hasData) {
                   return Container(
-                    margin: EdgeInsets.all(12.3),
+
                     child: Column(
                       children: [
                         ListView.builder(
                           itemBuilder: (context, index) {
                             var bank_details = snap.data!.docs;
+                            print(bank_details[index].get("status"));
                             return bank_details[index].get("status") ==
                                     "pending"
                                 ? build_data(index, bank_details,users)
@@ -69,6 +70,7 @@ class _UsersState extends State<Users> {
                           },
                           itemCount: snap.data!.docs.length,
                           shrinkWrap: true,
+                          padding: EdgeInsets.zero,
                         ),
                       ],
                     ),
@@ -82,20 +84,24 @@ class _UsersState extends State<Users> {
   }
 
   build_data(int index, bank_details, users) {
+    print(index);
     return Container(
       child: Column(
         children: [
           ListView(
             shrinkWrap: true,
+            padding: EdgeInsets.zero,
             children: [
               StreamBuilder<QuerySnapshot>(
                 stream: users,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     var name = snapshot.data!.docs;
+
                     return Container(
                       child: ListView.builder(
                           shrinkWrap: true,
+                          padding: EdgeInsets.zero,
                           itemCount: name.length,
                           itemBuilder: (context, count) {
                             return name[count].get("mobilenumber") ==
@@ -120,6 +126,7 @@ class _UsersState extends State<Users> {
                                      child: TextButton(
                                          onPressed: (){
                                            var id = bank_details[index].id;
+                                           print(id);
                                            var firstname = name[count].get("firstname");
                                            Navigator.push(
                                                context,
@@ -144,7 +151,7 @@ class _UsersState extends State<Users> {
                           }),
                     );
                   }
-                  return Container();
+                  return Center(child: CircularProgressIndicator());
                 },
               )
             ],
