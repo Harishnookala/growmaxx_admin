@@ -151,7 +151,7 @@ class _UsersState extends State<Users> {
                           }),
                     );
                   }
-                  return Center(child: CircularProgressIndicator());
+                  return Container();
                 },
               )
             ],

@@ -109,6 +109,8 @@ class _profitState extends State<profit> {
         else{
            amount = double.parse(investAmount) + profit;
         }
+        print(amount);
+        print(percentageAmount);
         String afterprofit = amount.toStringAsFixed(2);
         String beforeprofit =  double.parse(investAmount).toStringAsFixed(2);
        Map<String,dynamic>data = {
@@ -120,7 +122,8 @@ class _profitState extends State<profit> {
         "CreatedAt":DateTime.now(),
         "CurrentGains":profit.toString()
       };
-      await FirebaseFirestore.instance.collection("Current_gains").doc(collection.docs[i].id.toString()).set(gains);
+
+     await FirebaseFirestore.instance.collection("Current_gains").doc(collection.docs[i].id.toString()).set(gains);
        FirebaseFirestore.instance.collection("Investments").doc(collection.docs[i].id.toString()).update(data);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => adminPannel(selectedPage: 0)));

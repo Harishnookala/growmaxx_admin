@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:growmaxx_admin/repositories/authentication.dart';
 
 import 'Pan_details.dart';
 
@@ -16,7 +17,7 @@ class _BankAccountState extends State<BankAccount> {
   TextEditingController Reenternumber = TextEditingController();
   TextEditingController Ifsc = TextEditingController();
   final formKey = GlobalKey<FormState>();
-
+ Authentication authentication = Authentication();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -213,7 +214,8 @@ class _BankAccountState extends State<BankAccount> {
 
         ),
         onPressed: (){
-          if (formKey.currentState!.validate()){
+
+         if (formKey.currentState!.validate()){
             Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (BuildContext context) =>
                     Pan_deatils(phonenumber: widget.phonenumber,accountnumber: accountNumbeController.text,Ifsc: Ifsc.text,)));

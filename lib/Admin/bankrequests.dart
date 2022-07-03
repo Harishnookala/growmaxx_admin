@@ -34,7 +34,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
           builder: (context, snapshot) {
             if(snapshot.hasData){
               var bank_details = snapshot.data;
-
+              print(bank_details!.get("accountnumber"));
               return ListView(
                 shrinkWrap: true,
                 children: [
@@ -66,7 +66,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text("Mobile number  :  - "),
-                                        Text(bank_details!.get("phonenumber"))
+                                        Text(bank_details.get("phonenumber"))
                                       ],
                                     ),
                                     SizedBox(

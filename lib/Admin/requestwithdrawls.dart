@@ -12,6 +12,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
   var status;
   var collection =
       FirebaseFirestore.instance.collection("requestwithdrawls").snapshots();
+  var users = FirebaseFirestore.instance.collection("Users").get();
   var accepted = false;
   var rejected = false;
   int pressedaccepted = -1;
@@ -26,7 +27,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
             builder: (context, snap) {
               if (snap.hasData) {
                 return Container(
-                  margin: EdgeInsets.all(12.3),
+                  margin: EdgeInsets.only(top: 12.3),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -34,7 +35,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text("Phonenumber"),
-                          Text("withdrawl Amount"),
+                          Text("withdrawl Amount "),
                           Text("Status"),
                         ],
                       ),
@@ -49,6 +50,8 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
                               physics: ScrollPhysics(),
                               itemBuilder: (context, index) {
                                 var withdrawl = snap.data!.docs;
+                                var names = get_invests(withdrawl[index]);
+
                                 return withdrawl[index].get("status") ==
                                         "pending"
                                     ? Row(
@@ -58,10 +61,11 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Container(
-                                            alignment: Alignment.center,
+                                            alignment: Alignment.topLeft,
                                             child: Text(withdrawl[index]
                                                 .get("phonenumber")),
                                           ),
+
                                           Container(
                                             child: Text(withdrawl[index]
                                                 .get("InvestAmount")),
@@ -100,6 +104,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
     return Row(
       children: [
         TextButton(
+          style: TextButton.styleFrom(padding:EdgeInsets.zero),
             onPressed: () async {
               setState(() {
                 pressedaccepted = index;
@@ -107,11 +112,8 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
               });
               if (accepted == true) {
                 var saving_amount = await get_invests(withdrawl[index]);
-
                 var withdrawlamount =
-              double.parse(saving_amount) -
-                    double.parse(withdrawl[index].get("InvestAmount"));
-                print(withdrawlamount);
+                    double.parse(saving_amount) - double.parse(withdrawl[index].get("InvestAmount"));
                 Map<String, dynamic> updateamount = {
                   "InvestAmount": withdrawlamount.toString(),
                 };
@@ -123,7 +125,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
               Map<String, dynamic> data = {"status": "Accept"};
               var id = withdrawl[index].id;
 
-              await FirebaseFirestore.instance
+             await FirebaseFirestore.instance
                   .collection("requestwithdrawls")
                   .doc(id)
                   .update(data);
@@ -164,4 +166,12 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
     }
     return null;
   }
+
+  get_data(QueryDocumentSnapshot<Object?> withdrawl) {}
+
+  get_values(names) async{
+    Future future  =await names;
+  }
+
+
 }
