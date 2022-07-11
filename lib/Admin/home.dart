@@ -47,7 +47,8 @@ class _HomeState extends State<Home> {
             children: [
               SizedBox(height: 20,),
               Container(
-                width: 150,
+                width: 200,
+                height: 80,
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.brown),
                   borderRadius: BorderRadius.circular(12.6),),
@@ -57,21 +58,20 @@ class _HomeState extends State<Home> {
                     Container(
                       decoration: BoxDecoration(),
                       margin: EdgeInsets.only(left: 12.3),
-                      alignment: Alignment.topLeft,
-                      child: Text("Available Funds",
-                          style: TextStyle(color: Colors.orange, fontSize: 15)),
+                      alignment: Alignment.center,
+                      child: Text("Available Funds : - ",
+                          style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600, fontSize: 15)),
                     ),
                     SizedBox(height: 10,),
                     StreamBuilder<QuerySnapshot>(
                       stream: investments,
                       builder: (context, snap) {
-                        double total = 0.0;
                         if (snap.hasData && snap.requireData.docs.length > 0) {
                           var investments = snap.data;
-                          total = get_total(investments);
+                          double total = get_total(investments);
                           return Container(
-                            child: Text(total.toString(),
-                              style: TextStyle(color: Colors.blue),),
+                          child: Text(total.toString(),style:
+                          TextStyle(color: Colors.green,fontWeight: FontWeight.w500,fontSize: 16),),
                           );
                         }
                         return Container();
@@ -96,10 +96,11 @@ class _HomeState extends State<Home> {
   }
 
   get_total(QuerySnapshot<Object?>? investments) {
-    var total = 0.0;
+    double total = 0.0;
     for (int i = 0; i < investments!.docs.length; i++) {
       total = total + double.parse(investments.docs[i].get("InvestAmount"));
     }
+    print(total);
     return total;
   }
 
@@ -315,6 +316,7 @@ class _HomeState extends State<Home> {
               if (snapshot.hasData) {
                 List<QueryDocumentSnapshot> userwithdrawls = snapshot.data!.docs;
                 userinvestments.addAll(userwithdrawls);
+                print(start);
                 List selected_dates = getDaysInBetween(start!, end_date!);
                 List dates = get_dates(userinvestments, selectedValue);
                 transactions = get_transactions(dates, selectedValue, selected_dates, userinvestments);
@@ -467,7 +469,7 @@ get_data(List transactions) async {
   Permission.storage,
   ].request();
   List<List<dynamic>> rows = [];
-  List<dynamic> row  =[];
+  List<dynamic> row  = [];
    row.add("Date");
    row.add("phonenumber");
    row.add("Amount");
@@ -486,8 +488,8 @@ get_data(List transactions) async {
       ExternalPath.DIRECTORY_DOWNLOADS);
   print("dir $dir");
   String file = "$dir";
-   print(file);
-  File f = File(file + "/transactions.csv");
+
+  File f = File(file + "/$dates- $end.csv");
 
   f.writeAsString(csv);
 

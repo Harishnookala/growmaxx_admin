@@ -135,11 +135,19 @@ class _DetailsState extends State<Details> {
                                  Row(
                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                    children: [
+                                     Text("mothername : -"),
+                                     Text(user.get("mothername"))
+                                   ],
+                                 ),
+                                 SizedBox(height: 10,),
+                                 Row(
+                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                   children: [
                                      Text("mobilenumber : -"),
                                      Text(user.get("mobilenumber"))
                                    ],
                                  ),
-                                 SizedBox(height: 10,),
+                                 SizedBox(height: 15,),
 
                                  Row(
                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,7 +155,7 @@ class _DetailsState extends State<Details> {
                                      Text("Address : -"),
                                      Container(
                                          width: 160,
-
+                                         height: 60,
                                          child: Text(user.get("address")))
                                    ],
                                  ),
@@ -186,7 +194,7 @@ class _DetailsState extends State<Details> {
                                         Text(details.get("ifsc"))
                                       ],
                                     ),
-                                    SizedBox(height: 10,),
+                                    SizedBox(height: 16,),
 
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,7 +207,7 @@ class _DetailsState extends State<Details> {
                                     SizedBox(height: 10,),
 
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text("Pan Image   :  - "),
@@ -231,11 +239,13 @@ class _DetailsState extends State<Details> {
                                     SizedBox(height: 10,),
 
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text("Identity Proof   :  - "),
-                                        Container(width: 100,)
+                                        Text( details.get("proof" ) + " " + "Proof : -"),
+                                        Container(
+                                          width: 100,
+                                        )
                                       ],
                                     ),
                                     Container(margin: EdgeInsets.only(bottom: 5.6),),
@@ -264,7 +274,7 @@ class _DetailsState extends State<Details> {
                                 ),):Container(child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("Status"),
+                                    const Text("Status"),
                                     Text(details.get("status")),
                                   ],
                                 ),),
@@ -272,11 +282,8 @@ class _DetailsState extends State<Details> {
                                  SizedBox(height: 10,),
 
                                  TextButton(onPressed: (){
-                                   Navigator.push(
-                                       context,
-                                       MaterialPageRoute(
-                                           builder: (context) => adminPannel(selectedPage: 0,)));
-                                 }, child: Text("Back"))
+
+                                 }, child: Text("Download"))
                                ],
                              ),
                            ),

@@ -18,7 +18,7 @@ class _requestInvestmentsState extends State<requestInvestments> {
   int pressedrejectd = -1;
   @override
   Widget build(BuildContext context) {
-    TimeOfDay endTime = const TimeOfDay(hour: 22, minute:59 );
+    TimeOfDay endTime = const TimeOfDay(hour: 23, minute:59 );
     TimeOfDay now = TimeOfDay.now();
     double running_time = now.hour.toDouble() + (now.minute.toDouble() / 60);
     double closing_time =
@@ -33,20 +33,21 @@ class _requestInvestmentsState extends State<requestInvestments> {
           builder: (context, snap) {
             if (snap.hasData) {
               return Container(
-                margin: EdgeInsets.only(left: 12.3,right: 5.3,top: 9.3),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      margin: EdgeInsets.only(left: 12.3,right: 5.3,top: 9.3),
+
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Phonenumber",style: TextStyle(color: Colors.blueGrey),),
+                          Text("Username",style: TextStyle(color: Colors.blueGrey),),
                           Text("InvestAmount",style: TextStyle(color: Colors.blueGrey)),
                           Text("Status",style: TextStyle(color: Colors.blueGrey)),
                         ],
                       ),
-                      margin: EdgeInsets.only(top: 5.3),
+
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -70,10 +71,11 @@ class _requestInvestmentsState extends State<requestInvestments> {
                                         children: [
                                           Container(
                                             width:100,
-                                            child: Text(investments[index].get("phonenumber")),),
+                                            child: Text(investments[index].get("username")),),
                                           Container(
                                             margin: EdgeInsets.only(left: 8.3),
-                                            child: Text(investments[index].get("InvestAmount")),),
+                                            child: Text(" + "+investments[index].get("InvestAmount"),
+                                              style: TextStyle(color: Colors.green),),),
                                           Container(
                                             child: Row(
                                               children: [
@@ -95,7 +97,7 @@ class _requestInvestmentsState extends State<requestInvestments> {
                 ),
               );
             }
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           },
         )
       ],
@@ -117,29 +119,27 @@ class _requestInvestmentsState extends State<requestInvestments> {
                         accepted = true;
                       });
                       if (accepted == true) {
-                        var investid = await get_invests(investments[index]);
                         Map<String, dynamic> data = {"status": "Accept"};
                         var id = investments[index].id;
-                        var amount = investments[index].get("InvestAmount");
-
                         await FirebaseFirestore.instance.
                         collection("requestInvestments").doc(id).update(data);
-
+                        var amount = investments[index].get("InvestAmount");
+                        var investid = await get_invests(investments[index],investments[index].get("username"));
                         if (investid == null) {
                           Map<String, dynamic> investment = {
-                            "InvestAmount": amount,
+                            "InvestAmount": amount.toString(),
                             "phonenumber": investments[index].get("phonenumber"),
+                            "username": investments[index].get("username"),
                             "CreatedAt" : DateTime.now(),
                           };
                           await FirebaseFirestore.instance
-                              .collection("Investments")
-                              .doc(investments[index].get("phonenumber"))
+                              .collection("Investments").doc(investments[index].get("username"))
                               .set(investment);
                         }
 
                         else {
                           var InvestAmount = await get_data(
-                              investid, investments[index].get("phonenumber"));
+                              investid, investments[index].get("phonenumber"),investments[index].get("username"));
                           print(InvestAmount);
                           var savingAmount =
                               double.parse(InvestAmount) + double.parse(amount);
@@ -150,7 +150,7 @@ class _requestInvestmentsState extends State<requestInvestments> {
                           };
                           await FirebaseFirestore.instance
                               .collection("Investments")
-                              .doc(investments[index].get("phonenumber"))
+                              .doc(investments[index].get('username'))
                               .update(investedAmount);
                         }
                       }
@@ -182,26 +182,26 @@ class _requestInvestmentsState extends State<requestInvestments> {
         : Container();
   }
 
-  get_invests(QueryDocumentSnapshot<Object?> investment) async {
+  get_invests(QueryDocumentSnapshot<Object?> investment, String?username) async {
     String? phonenumber = investment.get("phonenumber");
     String? savingamount;
     var collectionRef = await FirebaseFirestore.instance
         .collection('Investments')
-        .doc(phonenumber)
+        .doc(username)
         .get();
     if (collectionRef.exists) {
-      if (collectionRef.get("phonenumber") == phonenumber)
+      if (collectionRef.get("username") == username)
         return collectionRef.get("InvestAmount");
     }
     return null;
   }
 
-  get_data(investid, phonenumber) async {
+  get_data(investid, phonenumber,String?username) async {
     var Investamount = await FirebaseFirestore.instance
         .collection("Investments")
-        .doc(phonenumber)
+        .doc(username)
         .get();
-    if (phonenumber == Investamount.get("phonenumber")) {
+    if (username == Investamount.get("username")) {
       var amount = Investamount.get("InvestAmount");
       return amount;
     }

@@ -115,7 +115,6 @@ class _profitState extends State<profit> {
         String beforeprofit =  double.parse(investAmount).toStringAsFixed(2);
        Map<String,dynamic>data = {
           "InvestAmount":afterprofit.toString(),
-          "beforepercentage":beforeprofit.toString(),
        };
       var dates = DateFormat('yyy-dd-MMM').format(DateTime.now());
       Map<String,dynamic>gains ={

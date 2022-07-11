@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:growmaxx_admin/Admin/withdrawl_details.dart';
 
 class Requestwithdrawl extends StatefulWidget {
   const Requestwithdrawl({Key? key}) : super(key: key);
@@ -20,6 +21,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 5.0,left: 16.3,right: 16.3,bottom: 8.3),
       child: Column(
         children: [
           StreamBuilder<QuerySnapshot>(
@@ -27,61 +29,69 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
             builder: (context, snap) {
               if (snap.hasData) {
                 return Container(
-                  margin: EdgeInsets.only(top: 12.3),
+                  margin: const EdgeInsets.only(top: 12.3),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Phonenumber"),
-                          Text("withdrawl Amount "),
-                          Text("Status"),
+                        children: const [
+                          Text("Username",style: TextStyle(color: Colors.orange),),
+                          Text("withdrawl Amount ",
+                              style: TextStyle(color: Colors.orange)),
+                          Text("Status",
+                              style: TextStyle(color: Colors.orange)),
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
                             child: ListView.builder(
                               itemCount: snap.data!.docs.length,
                               shrinkWrap: true,
-                              physics: ScrollPhysics(),
+                              physics: const ScrollPhysics(),
                               itemBuilder: (context, index) {
                                 var withdrawl = snap.data!.docs;
-                                var names = get_invests(withdrawl[index]);
-
                                 return withdrawl[index].get("status") ==
                                         "pending"
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(withdrawl[index]
-                                                .get("phonenumber")),
-                                          ),
+                                    ? FutureBuilder<DocumentSnapshot>(
+                                     future: FirebaseFirestore.instance.collection("Investments").doc(withdrawl[index].get("phonenumber")).get(),
+                                    builder: (context,snapshot){
+                                       if(snapshot.hasData){
+                                         var value = snapshot.data;
+                                         return Container(
+                                           margin: EdgeInsets.only(top: 6.3),
+                                           child: Row(
+                                             mainAxisAlignment:
+                                             MainAxisAlignment.spaceBetween,
+                                             children: [
+                                               Container(
+                                                 alignment: Alignment.topLeft,
+                                                 child: Text(withdrawl[index]
+                                                     .get("username"),style: TextStyle(color: Colors.blueGrey),),
+                                               ),
+                                               Container(
+                                                 child: Text(" - "+withdrawl[index]
+                                                     .get("InvestAmount"),style: TextStyle(color: Colors.red),),
+                                                 alignment: Alignment.topLeft,
+                                               ),
+                                               Container(
+                                                 child: Row(
+                                                   children: [
+                                                     build_buttons(index, withdrawl)
+                                                   ],
 
-                                          Container(
-                                            child: Text(withdrawl[index]
-                                                .get("InvestAmount")),
-                                            alignment: Alignment.center,
-                                          ),
-                                          Container(
-                                            child: Row(
-                                              children: [
-                                                build_buttons(index, withdrawl)
-                                              ],
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                            ),
-                                          )
-                                        ],
-                                      )
+                                                 ),
+                                               )
+                                             ],
+                                           ),
+                                         );
+                                       }return Center(
+                                           child: CircularProgressIndicator());
+                                    },
+                                )
                                     : Container();
                               },
                             ),
@@ -104,51 +114,26 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
     return Row(
       children: [
         TextButton(
-          style: TextButton.styleFrom(padding:EdgeInsets.zero),
+          style: TextButton.styleFrom(padding:EdgeInsets.zero,
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.3)),
+              elevation:0.6
+          ),
             onPressed: () async {
-              setState(() {
-                pressedaccepted = index;
-                accepted = true;
-              });
-              if (accepted == true) {
-                var saving_amount = await get_invests(withdrawl[index]);
-                var withdrawlamount =
-                    double.parse(saving_amount) - double.parse(withdrawl[index].get("InvestAmount"));
-                Map<String, dynamic> updateamount = {
-                  "InvestAmount": withdrawlamount.toString(),
-                };
-                await FirebaseFirestore.instance
-                    .collection("Investments")
-                    .doc(withdrawl[index].get("phonenumber"))
-                    .update(updateamount);
-              }
-              Map<String, dynamic> data = {"status": "Accept"};
-              var id = withdrawl[index].id;
-
-             await FirebaseFirestore.instance
-                  .collection("requestwithdrawls")
-                  .doc(id)
-                  .update(data);
+             var withdrawlAmount = withdrawl[index].get("InvestAmount");
+             var username = withdrawl[index].get("username");
+             var phonenumber = withdrawl[index].get("phonenumber");
+             var id = withdrawl[index].id;
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+                 builder: (BuildContext context) =>
+                     withdrawl_details(withdrawl:withdrawlAmount,
+                         phonenumber:phonenumber,
+                        id:id,
+                       username:username,
+                     )));
             },
-            child:
-                pressedaccepted == index ? Text("Accepted") : Text("Accept")),
-        TextButton(
-            onPressed: () async {
-              setState(() {
-                if (rejected == index) {
-                  rejected = true;
-                  pressedrejectd = index;
-                }
-              });
-              Map<String, dynamic> statusupdate = {"status": "Reject"};
-              var id = withdrawl[index].id;
+            child:  Text("Details",style: TextStyle(color: Colors.white),)),
 
-              await FirebaseFirestore.instance
-                  .collection("requestwithdrawls")
-                  .doc(id)
-                  .update(statusupdate);
-            },
-            child: pressedrejectd == index ? Text("Rejected") : Text("Reject")),
       ],
     );
   }
@@ -167,11 +152,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
     return null;
   }
 
-  get_data(QueryDocumentSnapshot<Object?> withdrawl) {}
 
-  get_values(names) async{
-    Future future  =await names;
-  }
 
 
 }

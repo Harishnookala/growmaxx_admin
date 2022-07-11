@@ -57,6 +57,23 @@ class Authentication {
       return url;
     }
   }
-
+  Future<DocumentSnapshot?>bank_inf(String? phonenumber) async {
+    var details = await FirebaseFirestore.instance.collection("bank_details").get();
+    var id;
+    for (int i = 0; i < details.docs.length; i++) {
+      id = details.docs[i].id;
+      if (id != null&&details.docs[i].get("phonenumber")==phonenumber) {
+        if (details.docs[i].exists) {
+          var bankDetails = await FirebaseFirestore.instance.collection(
+              "bank_details").doc(id).get();
+          return bankDetails;
+        }
+      }else{
+        if(!details.docs[i].exists){
+          return null;
+        }
+      }
+    }
+  }
 
 }

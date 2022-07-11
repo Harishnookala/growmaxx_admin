@@ -24,7 +24,7 @@ class _FundsState extends State<Funds> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.all(12.3),
+       // margin: EdgeInsets.all(5.3),
     child: DefaultTabController(
          length: 2,
         initialIndex: 0,
@@ -33,6 +33,7 @@ class _FundsState extends State<Funds> {
       children: [
         Container(
           child: TabBar(
+            physics: BouncingScrollPhysics(),
             labelColor: Colors.green,
             unselectedLabelColor: Colors.black54,
             tabs: [
@@ -49,9 +50,13 @@ class _FundsState extends State<Funds> {
      
        Expanded(
          child: TabBarView(
-              children: [
-                requestInvestments(),
-                Requestwithdrawl()
+           physics: BouncingScrollPhysics(),
+           children: [
+                Container(
+                    child: requestInvestments(),
+                   margin: EdgeInsets.only(top:6.3),
+                ),
+                 Requestwithdrawl()
               ],
           
           ),

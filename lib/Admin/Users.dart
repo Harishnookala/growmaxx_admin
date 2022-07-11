@@ -134,6 +134,7 @@ class _UsersState extends State<Users> {
                                                builder: (context) => Bankingrequests(
                                              id: id,
                                              name: firstname,
+                                                 phonenumber:name[count].get("mobilenumber"),
                                            )));
                                          },
                                          child: Text("Details",style: TextStyle(color: Colors.white),),
@@ -151,7 +152,7 @@ class _UsersState extends State<Users> {
                           }),
                     );
                   }
-                  return Container();
+                  return Center(child: CircularProgressIndicator());
                 },
               )
             ],

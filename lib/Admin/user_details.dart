@@ -1,9 +1,13 @@
+// ignore_for_file: camel_case_types
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/adminPannel.dart';
-import 'details.dart';
+import 'active_user.dart';
+import 'inactive_user.dart';
+
 class user_details extends StatefulWidget {
-   user_details({Key? key}) : super(key: key);
+  const user_details({Key? key}) : super(key: key);
 
   @override
   State<user_details> createState() => _user_detailsState();
@@ -16,133 +20,214 @@ class _user_detailsState extends State<user_details> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.only(left: 14.3,right: 12.3),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 25,),
-                Container(
-                  child: IconButton(onPressed: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            adminPannel(selectedPage: 0,)));
-                  }, icon: Icon(Icons.arrow_back_ios_new_outlined,size: 22,color: Colors.lightBlueAccent,)),
-                ),
-                Divider(
-                    height: 1, thickness: 1.5, color: Colors.green.shade400),
-                Container(
-                    margin: EdgeInsets.all(5.3),
-                    child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 6.3,
+        backgroundColor: Colors.blueGrey.shade50,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                margin: const EdgeInsets.only(top: 14.3),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (BuildContext context) => adminPannel(
+                                selectedPage: 0,
+                              )));
+                    },
+                    child: const Icon(Icons.arrow_back_ios_new_outlined))),
+            Expanded(
+              child: SizedBox(
+                child: DefaultTabController(
+                  length: 2,
+                  initialIndex: 0,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const TabBar(
+                        physics: BouncingScrollPhysics(),
+                        labelColor: Colors.green,
+                        unselectedLabelColor: Colors.black54,
+                        tabs: [
+                          Tab(text: 'Active Users'),
+                          Tab(text: 'Inactive Users'),
+                        ],
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                            border: Border(
+                                top: BorderSide(
+                                    color: Colors.grey, width: 0.5))),
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            FutureBuilder<QuerySnapshot>(
+                              future: users,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData &&
+                                    snapshot.data!.docs.isNotEmpty) {
+                                  var details = snapshot.data!.docs;
+                                  List activeusers = get_data(details);
+                                  return Container(
+                                    margin: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children:const [
+                                            Text("Username"),
+                                            Text("phonenumber"),
+                                            Text("Status")
+                                          ],
+                                        ),
+                                        ListView.builder(
+                                            shrinkWrap: true,
+                                            physics:  BouncingScrollPhysics(),
+                                            padding: const EdgeInsets.only(top: 12.3),
+                                            itemCount: activeusers.length,
+                                            itemBuilder: (context, index) {
+                                              return Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(activeusers[index]
+                                                      .get("username")),
+                                                  Text(activeusers[index]
+                                                      .get("mobilenumber")),
+                                                  TextButton(
+                                                      style: TextButton.styleFrom(
+                                                          backgroundColor:
+                                                              Colors.green,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          12.3)),
+                                                          elevation: 0.6),
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        Active_user(
+                                                                          id: activeusers[index]
+                                                                              .id,
+                                                                        )));
+                                                      },
+                                                      child: const Text(
+                                                        "Details",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16),
+                                                      ))
+                                                ],
+                                              );
+                                            })
+                                      ],
+                                    ),
+                                  );
+                                }
+                                return const Center(child: CircularProgressIndicator());
+                              },
+                            ),
+                            FutureBuilder<QuerySnapshot>(
+                                future: users,
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data!.docs.isNotEmpty) {
+                                    var details = snapshot.data!.docs;
+                                    print(details);
+                                    List? inactiveusers = get_list(details);
+                                    return ListView(
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.zero,
+                                      physics: BouncingScrollPhysics(),
+                                      children: [
+                                        Container(
+                                          margin: const EdgeInsets.all(12.3),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: const [
+                                              Text("Username"),
+                                              Text("phonenumber"),
+                                              Text("Status")
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.only(left: 12.3,right: 12.3),
+                                          child: ListView.builder(
+                                              shrinkWrap: true,
+                                              physics: BouncingScrollPhysics(),
+                                              itemCount: inactiveusers!.length,
+                                              padding: EdgeInsets.zero,
+                                              itemBuilder: (context, index) {
+                                                return Container(
+                                                  margin: EdgeInsets.only(bottom: 8.3),
+                                                  child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        Text(inactiveusers[index].get("firstname").toString()),
+                                                        Text(inactiveusers[index].get("mobilenumber")),
+                                                        TextButton(
+                                                            style: TextButton.styleFrom(
+                                                                backgroundColor: Colors.green,
+                                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.3)),
+                                                                elevation: 0.6),
+                                                            onPressed: () {
+                                                              Navigator.push(context, MaterialPageRoute(
+                                                                      builder: (context) => Inactive_user(
+                                                                                id: inactiveusers[index].id,)));
+                                                            },
+                                                            child: const Text(
+                                                              "Details",
+                                                              style: TextStyle(color: Colors.white, fontSize: 16),
+                                                            )),
+                                                      ]),
+                                                );
+                                              })
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }),
+                          ],
                         ),
-                        child: const Text(
-                          "User Details",
-                          style: TextStyle(
-                              letterSpacing: 0.6,
-                              color: Colors.indigoAccent,
-                              fontFamily: "Poppins-Light",
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16),
-                        ))),
-                Divider(
-                    height: 1, thickness: 1.5, color: Colors.green.shade400),
-                SizedBox(height: 10,),
-                Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(left: 4.3,top: 5.3),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Name",style: TextStyle(color: Colors.pink.shade900),),
-                          Text("Phonenumber",style: TextStyle(color: Colors.pink.shade900)),
-                          Text("Status",style: TextStyle(color: Colors.pink.shade900))
-                        ],
                       ),
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                           build_details(),
-                        ],
-                      ),
-                    )
-                  ],
-                )
-              ],
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  build_details() {
-    return FutureBuilder<QuerySnapshot>(
-      future: users,
-      builder: (context,snapshot){
-        if(snapshot.hasData){
-          List<QueryDocumentSnapshot<Object?>> details = snapshot.data!.docs;
-          List user_details = get_data(details);
-          print(user_details);
-          return Container(
-            child: Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.only(top: 5.3),
-                  shrinkWrap: true,
-                  itemCount: user_details.length,
-                  itemBuilder: (context,index){
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                      Text(user_details[index][0]),
-                      Text(user_details[index][1]),
-                    SizedBox(
-                      child: TextButton(
-                        onPressed: (){
-                        var id= user_details[index][2];
-                        var name = user_details[index][0];
-                        var phonenumber = user_details[index][1];
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Details(
-                                  id: id,
-                                  name: name,
-                                  phonenumber:phonenumber
-                                )));
-                        },
-                        child: Text("Details",style: TextStyle(color: Colors.white),),
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.3)),
-                            elevation:0.6
-                        ),
-                      ),
-                    )
-                    ],
-                  );
-              }),
-            ),
-          );
-        }return CircularProgressIndicator();
-      },
-    );
+  get_data(List<QueryDocumentSnapshot<Object?>> details) {
+    List listofusers = [];
+    for (int i = 0; i < details.length; i++) {
+      if (details[i].get("username") != null) {
+        listofusers.add(details[i]);
+      }
+    }
+    return listofusers;
   }
 
-  get_data(List<QueryDocumentSnapshot<Object?>> details) {
-    List all_details=[];
-    for(int i=0;i<details.length;i++){
-      var name = details[i].get("firstname");
-      var mobilenumber = details[i].get("mobilenumber");
-      var id = details[i].id;
-      all_details.add([name,mobilenumber,id]);
-
+  List? get_list(List<QueryDocumentSnapshot<Object?>> details) {
+    List listofusers = [];
+    for (int i = 0; i < details.length; i++) {
+      if (details[i].get("username") == null) {
+        listofusers.add(details[i]);
+      }
     }
-    return all_details;
+    return listofusers;
   }
 }

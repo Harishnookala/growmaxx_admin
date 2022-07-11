@@ -54,6 +54,9 @@ dependencies:
   back_button_interceptor: ^6.0.0
   external_path: ^1.0.1
   csv: ^5.0.1
+  pdf: ^3.7.4
+  google_fonts: ^3.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

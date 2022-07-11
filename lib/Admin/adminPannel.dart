@@ -25,7 +25,6 @@ class adminPannelState extends State<adminPannel>{
   adminPannelState({this.phonenumber});
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return DefaultTabController(
       initialIndex: widget.selectedPage!,
       length: 4,
@@ -66,6 +65,7 @@ class adminPannelState extends State<adminPannel>{
           ),
         ),
          body: TabBarView(
+           physics: BouncingScrollPhysics(),
            children: [
              Home(),
              Funds(),

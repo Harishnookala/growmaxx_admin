@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/adminPannel.dart';
 
-import 'Users.dart';
 
 class Bankingrequests extends StatefulWidget {
   String? id;
   String? name;
-  Bankingrequests({Key? key, this.id, this.name}) : super(key: key);
+  String?phonenumber;
+  Bankingrequests({Key? key,this.id, this.name,this.phonenumber}) : super(key: key);
 
   @override
   State<Bankingrequests> createState() => _BankingrequestsState();
@@ -19,6 +19,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
   var rejected = false;
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     var collection = FirebaseFirestore.instance
         .collection("bank_details")
         .doc(widget.id)
@@ -28,13 +29,12 @@ class _BankingrequestsState extends State<Bankingrequests> {
       home: Scaffold(
         backgroundColor: Colors.blueGrey,
       body: Container(
-        margin: EdgeInsets.all(8.3),
+        margin: const EdgeInsets.all(8.3),
         child: FutureBuilder<DocumentSnapshot>(
           future: collection,
           builder: (context, snapshot) {
             if(snapshot.hasData){
               var bank_details = snapshot.data;
-              print(bank_details!.get("accountnumber"));
               return ListView(
                 shrinkWrap: true,
                 children: [
@@ -45,18 +45,18 @@ class _BankingrequestsState extends State<Bankingrequests> {
                         children: [
                                  ListView(
                                   shrinkWrap: true,
-                                  physics: ScrollPhysics(),
+                                  physics: const ScrollPhysics(),
                                   children: [
                                     Container(
+                                      margin: EdgeInsets.only(top: 20.3),
                                       child: Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Text("Name  :  - "),
+                                          const Text("Name  :  - "),
                                           Text(widget.name!)
                                         ],
                                       ),
-                                      margin: EdgeInsets.only(top: 20.3),
                                     ),
                                     SizedBox(
                                       height: 15,
@@ -66,7 +66,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Text("Mobile number  :  - "),
-                                        Text(bank_details.get("phonenumber"))
+                                        Text(bank_details!.get("phonenumber"))
                                       ],
                                     ),
                                     SizedBox(
@@ -174,13 +174,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
                                               onPressed: () async{
                                             accepted = true;
                                             if(accepted){
-                                              Map<String,dynamic>updatedata={
-                                                "status":"Accept",
-                                                "name":widget.name,
-                                              };
-                                              await FirebaseFirestore.instance.collection("bank_details").doc(widget.id).update(updatedata);
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(builder: (context) => adminPannel(selectedPage: 3)));
+                                                updatedata(bank_details);
                                             }
                                           }, child: Text("Accept",style: TextStyle(color: Colors.white,fontSize: 15),)),
                                         ),
@@ -223,5 +217,45 @@ class _BankingrequestsState extends State<Bankingrequests> {
       ),
     ),
     );
+  }
+
+  void updatedata(DocumentSnapshot<Object?> bank_details) async{
+    var details = bank_details.get("username");
+    Map<String,dynamic>updatedata ={};
+    Map<String,dynamic>user_data ={};
+    String smallstring = widget.phonenumber.toString().substring(6,10);
+    String username = "Gm$smallstring";
+    if(details ==null){
+      updatedata={
+        "status":"Accept",
+        "name":widget.name,
+        "username":username,
+        "Currentdate":DateTime.now()
+      };
+      user_data={
+        "username":username,
+      };
+       var id = await get_id(widget.phonenumber);
+      await FirebaseFirestore.instance.collection("Users").doc(id).
+      update(user_data);
+    }
+    else{
+      updatedata ={
+        "status":"Accept",
+      };
+    }
+
+    await FirebaseFirestore.instance.collection("bank_details").doc(widget.id).update(updatedata);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => adminPannel(selectedPage: 3)));
+  }
+
+  get_id(String? phonenumber) async{
+    var user = await FirebaseFirestore.instance.collection("Users").get();
+    for(int i =0;i<user.docs.length;i++){
+      if(user.docs[i].get("mobilenumber")==phonenumber){
+        return user.docs[i].id;
+      }
+    }
   }
 }
