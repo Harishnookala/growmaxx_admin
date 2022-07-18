@@ -32,7 +32,8 @@ class _HomeState extends State<Home> {
   FirebaseFirestore.instance.collection("requestInvestments").snapshots();
   var requestWithdrawls =
   FirebaseFirestore.instance.collection("requestwithdrawls").snapshots();
- List transactions =[];
+ var formatter =  NumberFormat("###,###.0#", "en_US");
+  List transactions =[];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,9 +70,11 @@ class _HomeState extends State<Home> {
                         if (snap.hasData && snap.requireData.docs.length > 0) {
                           var investments = snap.data;
                           double total = get_total(investments);
+                          var after = formatter.format(total).replaceAll(" ", " ,  ");
+                          print(after);
                           return Container(
-                          child: Text(total.toString(),style:
-                          TextStyle(color: Colors.green,fontWeight: FontWeight.w500,fontSize: 16),),
+                          child: Text("₹ "+ after.toString().replaceAll(" ", ","),style:
+                          const TextStyle(color: Colors.green,fontWeight: FontWeight.w500,fontSize: 16),),
                           );
                         }
                         return Container();
@@ -181,11 +184,13 @@ class _HomeState extends State<Home> {
           children: [
             SizedBox(height: 10,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Date"),
-                Text("Phonenumber"),
-                Text("Transactions"),
+                Container(
+
+                    child: Text("Date")),
+                Container(child: Text("Username")),
+                Container(child: Text("Transactions")),
               ],
             ),
             Divider(color: Colors.grey,),
@@ -330,18 +335,27 @@ class _HomeState extends State<Home> {
                         return Container(
                           margin: EdgeInsets.only(bottom: 14.3),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(transactions[index][0]),
-                              Text(transactions[index][1].toString()),
-                              transactions[index][2][0]=="+"?Container(child: Row(
+                              Container(
+
+                                  child: Text(transactions[index][0])),
+                              Container(
+                                 alignment: Alignment.topLeft,
+                                  child: Text(transactions[index][1].toString())),
+                              transactions[index][2][0]=="+"?Container(
+                               margin: EdgeInsets.only(right: 12.3),
+                                child: Row(
                                 children: [
                                   Container(
+
                                       margin: EdgeInsets.only(right: 3.3),
                                       child: Text(transactions[index][2][0].toString(),style: TextStyle(color: Colors.green),)),
                                   Text(transactions[index][3],style: TextStyle(color: Colors.green),),
                                 ],
                               ),):Container(
+                                margin: EdgeInsets.only(right: 12.3),
+
                                 child: Row(
                                   children: [
                                     Container(
@@ -454,7 +468,7 @@ class _HomeState extends State<Home> {
                 else{
                   symbol= " - ";
                 }
-               all_transactions.add([dateformat,userinvestments[l].get("phonenumber"),[symbol],userinvestments[l].get("InvestAmount")]);
+               all_transactions.add([dateformat,userinvestments[l].get("username"),[symbol],userinvestments[l].get("InvestAmount")]);
               }
             }
           }
@@ -471,11 +485,11 @@ get_data(List transactions) async {
   List<List<dynamic>> rows = [];
   List<dynamic> row  = [];
    row.add("Date");
-   row.add("phonenumber");
+   row.add("username");
    row.add("Amount");
   rows.add(row);
    for(int i=0;i<transactions.length;i++){
-     List<dynamic> row  =[];
+     List<dynamic> row  = [];
     row.add(transactions[i][0]);
     row.add(transactions[i][1]);
     row.add(transactions[i][2][0] + transactions[i][3]);

@@ -205,7 +205,7 @@ class _Active_userState extends State<Active_user> {
                                   ),
                                   FutureBuilder<DocumentSnapshot?>(
                                       future: authentication.bank_inf(
-                                          user_details.get('mobilenumber')),
+                                          user_details.get('username')),
                                       builder: (context, snapshot) {
                                         if (snapshot.hasData &&
                                             snapshot.requireData!.exists) {
@@ -248,7 +248,7 @@ class _Active_userState extends State<Active_user> {
                                                       bottom: 5.6),
                                                 ),
                                                 const SizedBox(
-                                                  height: 10,
+                                                  height: 20,
                                                 ),
                                                pdfpage(details: bank_details,user_details: user_details,)
                                               ],

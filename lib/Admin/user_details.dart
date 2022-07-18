@@ -138,7 +138,6 @@ class _user_detailsState extends State<user_details> {
                                   if (snapshot.hasData &&
                                       snapshot.data!.docs.isNotEmpty) {
                                     var details = snapshot.data!.docs;
-                                    print(details);
                                     List? inactiveusers = get_list(details);
                                     return ListView(
                                       shrinkWrap: true,

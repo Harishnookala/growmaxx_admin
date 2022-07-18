@@ -224,7 +224,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
     Map<String,dynamic>updatedata ={};
     Map<String,dynamic>user_data ={};
     String smallstring = widget.phonenumber.toString().substring(6,10);
-    String username = "Gm$smallstring";
+    String username = "GM$smallstring";
     if(details ==null){
       updatedata={
         "status":"Accept",

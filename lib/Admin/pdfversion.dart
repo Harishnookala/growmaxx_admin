@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:android_path_provider/android_path_provider.dart';
 import 'package:external_path/external_path.dart';
+import 'package:file_manager/file_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:permission_handler/permission_handler.dart';
@@ -22,6 +25,7 @@ class _pdfpageState extends State<pdfpage> {
   DocumentSnapshot<Object?> ?user_details;
   DocumentSnapshot<Object?>? details;
   _pdfpageState({this.user_details,this.details});
+  final FileManagerController controller = FileManagerController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +35,12 @@ class _pdfpageState extends State<pdfpage> {
             backgroundColor: Colors.deepOrange.shade400,
             elevation: 0.6,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.3)),
-            minimumSize: Size(120, 30)
+            minimumSize: Size(140, 40)
         ),
         onPressed: () async{
           generatePDF(details!,user_details!);
         },
-        child: Text("Download",style: TextStyle(color: Colors.white),),
+        child: Text("Download",style: TextStyle(color: Colors.white,fontSize:15,fontFamily: "Poppins-Medium"),),
       ),
     );
   }
@@ -170,14 +174,10 @@ class _pdfpageState extends State<pdfpage> {
             })
     );
 
-    String dir;
-
-    dir = await ExternalPath.getExternalStoragePublicDirectory(
+   String? dir = await ExternalPath.getExternalStoragePublicDirectory(
         ExternalPath.DIRECTORY_DOWNLOADS);
-    print("dir $dir");
     String file = "$dir";
-
-    File f = File("$file/$username.pdf");
+    File f = File("$file/Users/$username.pdf");
     await f.writeAsBytes(await pdf.save());
   }
 }
