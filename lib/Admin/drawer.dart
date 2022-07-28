@@ -1,5 +1,8 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:growmaxx_admin/Admin/shownupi.dart';
+import 'package:growmaxx_admin/Admin/upi.dart';
 import 'package:growmaxx_admin/Admin/user_details.dart';
 import 'package:growmaxx_admin/Forms/personal_details.dart';
 class build_drawer extends StatefulWidget {
@@ -55,6 +58,27 @@ class _build_draweState extends State<build_drawer> {
               );
             },
             child: Text(" +  Create Account"),
+          ),
+        ),
+        Container(
+          child: TextButton(
+            onPressed: () async{
+              var value = await FirebaseFirestore.instance.collection("Upi").doc("upi").get();
+              print(value);
+              if(value==null){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  upi()),
+                );
+              }
+              else{
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  shownupi()),
+                );
+              }
+            },
+            child: Text("Upi id"),
           ),
         )
       ],

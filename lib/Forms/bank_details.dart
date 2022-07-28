@@ -214,9 +214,8 @@ class _BankAccountState extends State<BankAccount> {
 
         ),
         onPressed: (){
-
          if (formKey.currentState!.validate()){
-            Navigator.of(context).pushReplacement(MaterialPageRoute(
+            Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) =>
                     Pan_deatils(phonenumber: widget.phonenumber,accountnumber: accountNumbeController.text,Ifsc: Ifsc.text,)));
           }

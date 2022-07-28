@@ -40,13 +40,13 @@ class _HomeState extends State<Home> {
       margin: EdgeInsets.only(left: 12.3),
       child: ListView(
         shrinkWrap: true,
-        physics: ScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               Container(
                 width: 200,
                 height: 80,
@@ -55,15 +55,15 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(12.6),),
                 child: Column(
                   children: [
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     Container(
-                      decoration: BoxDecoration(),
-                      margin: EdgeInsets.only(left: 12.3),
+                      decoration: const BoxDecoration(),
+                      margin: const EdgeInsets.only(left: 12.3),
                       alignment: Alignment.center,
-                      child: Text("Available Funds : - ",
-                          style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600, fontSize: 15)),
+                      child: const Text("Available Funds : - ",
+                          style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600, fontSize: 16)),
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
                     StreamBuilder<QuerySnapshot>(
                       stream: investments,
                       builder: (context, snap) {
@@ -71,25 +71,22 @@ class _HomeState extends State<Home> {
                           var investments = snap.data;
                           double total = get_total(investments);
                           var after = formatter.format(total).replaceAll(" ", " ,  ");
-                          print(after);
-                          return Container(
-                          child: Text("₹ "+ after.toString().replaceAll(" ", ","),style:
-                          const TextStyle(color: Colors.green,fontWeight: FontWeight.w500,fontSize: 16),),
-                          );
+                          return Text("₹ ${after.toString().replaceAll(" ", ",")}",style:
+                          const TextStyle(color: Colors.green,fontWeight: FontWeight.w500,fontSize: 16),);
                         }
                         return Container();
                       },
                     ),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
 
                   ],
                 ),
               ),
-              SizedBox(height: 15,),
+             const SizedBox(height: 15,),
               selected_type(),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               display_buttons(),
-              SizedBox(height: 10,),
+              const SizedBox(height: 10,),
 
             ],
           ),
@@ -103,7 +100,6 @@ class _HomeState extends State<Home> {
     for (int i = 0; i < investments!.docs.length; i++) {
       total = total + double.parse(investments.docs[i].get("InvestAmount"));
     }
-    print(total);
     return total;
   }
 
@@ -120,7 +116,7 @@ class _HomeState extends State<Home> {
                   .size
                   .width / 1.25,
               alignment: Alignment.topLeft,
-              margin: EdgeInsets.only(right: 3.3),
+              margin: const EdgeInsets.only(right: 3.3),
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(1.3)),
@@ -129,31 +125,30 @@ class _HomeState extends State<Home> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
-                    child: Container(
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                              padding: EdgeInsets.zero),
-                          onPressed: () async {
-                            dateTimeRange =
-                            await showDateRangePicker(
-                              context: context,
-                              firstDate: DateTime(2022),
-                              lastDate: DateTime.now().add(const Duration(days: 1)),
-                            );
-                            setState(() {
-                              start = dateTimeRange!.start;
-                              end_date = dateTimeRange!.end;
-                              dates = DateFormat('yyyy-MM-dd')
-                                  .format(dateTimeRange!.start);
-                              end = DateFormat("yyyy-MM-dd").format(
-                                  dateTimeRange!.end);
-                            });
-                          },
-                          child: Icon(
-                            Icons.date_range_outlined,
-                            size: 25,
-                          ),
-                        )),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero),
+                      onPressed: () async {
+                        dateTimeRange =
+                        await showDateRangePicker(
+                          context: context,
+                          firstDate: DateTime(2022),
+                          lastDate: DateTime.now().add(const Duration(days: 1)),
+                        );
+                        setState(() {
+                          start = dateTimeRange!.start;
+                          end_date = dateTimeRange!.end;
+                          dates = DateFormat('yyyy-MM-dd')
+                              .format(dateTimeRange!.start);
+                          end = DateFormat("yyyy-MM-dd").format(
+                              dateTimeRange!.end);
+                        });
+                      },
+                      child: Icon(
+                        Icons.date_range_outlined,
+                        size: 25,
+                      ),
+                    ),
                   ),
                   Text(dateTimeRange != null
                       ? dates.toString() + "  -  " + end.toString()
@@ -169,7 +164,7 @@ class _HomeState extends State<Home> {
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
                 elevation: 0.6,
-                minimumSize: Size(120, 30),
+                minimumSize: const Size(120, 30),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.3)),),
               onPressed: () {
@@ -177,26 +172,24 @@ class _HomeState extends State<Home> {
                   pressed = true;
                 });
               },
-              child: Text("Submit", style: TextStyle(color: Colors
+              child: const Text("Submit", style: TextStyle(color: Colors
                   .white),)),
         ),
         pressed == true ? Column(
           children: [
-            SizedBox(height: 10,),
+           const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-
-                    child: Text("Date")),
-                Container(child: Text("Username")),
-                Container(child: Text("Transactions")),
+              children: const [
+                Text("Date"),
+                Text("Username"),
+                Text("Transactions"),
               ],
             ),
             Divider(color: Colors.grey,),
             ListView(
               shrinkWrap: true,
-              physics: ScrollPhysics(),
+              physics: const ScrollPhysics(),
               children: [
                 get_alltransactions(),
               ],
@@ -207,12 +200,12 @@ class _HomeState extends State<Home> {
                     backgroundColor: Colors.deepOrange.shade400,
                     elevation: 0.6,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.3)),
-                    minimumSize: Size(120, 30)
+                    minimumSize: const Size(120, 30)
                   ),
                 onPressed: () async{
                    get_data(transactions);
                 },
-                child: Text("Download",style: TextStyle(color: Colors.white),),
+                child: const Text("Download",style: TextStyle(color: Colors.white),),
               ),
             ):Container(),
           ],
@@ -226,8 +219,8 @@ class _HomeState extends State<Home> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-            margin: EdgeInsets.only(right: 12.3),
-            child: Text("Transaction  : - ")),
+            margin: const EdgeInsets.only(right: 12.3),
+            child: const Text("Transaction  : - ")),
         DropdownButtonHideUnderline(
           child: DropdownButton2(
             isExpanded: true,
@@ -321,55 +314,51 @@ class _HomeState extends State<Home> {
               if (snapshot.hasData) {
                 List<QueryDocumentSnapshot> userwithdrawls = snapshot.data!.docs;
                 userinvestments.addAll(userwithdrawls);
-                print(start);
-                List selected_dates = getDaysInBetween(start!, end_date!);
-                List dates = get_dates(userinvestments, selectedValue);
-                transactions = get_transactions(dates, selectedValue, selected_dates, userinvestments);
-                return Container(
-                  child: ListView.builder(
-                    physics: ScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: transactions.length,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.only(bottom: 14.3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
 
-                                  child: Text(transactions[index][0])),
-                              Container(
-                                 alignment: Alignment.topLeft,
-                                  child: Text(transactions[index][1].toString())),
-                              transactions[index][2][0]=="+"?Container(
-                               margin: EdgeInsets.only(right: 12.3),
-                                child: Row(
+                List selectedDates = getDaysInBetween(start!, end_date!);
+                List dates = get_dates(userinvestments, selectedValue);
+                transactions = get_transactions(dates, selectedValue, selectedDates, userinvestments);
+                return ListView.builder(
+                  physics: const ScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: transactions.length,
+                    padding: EdgeInsets.zero,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 14.3),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                                child: Text(transactions[index][0])),
+                            Container(
+                               alignment: Alignment.topLeft,
+                                child: Text(transactions[index][1].toString())),
+                            transactions[index][2][0]=="+"?Container(
+                             margin: const EdgeInsets.only(right: 12.3),
+                              child: Row(
+                              children: [
+                                Container(
+                                    margin:const EdgeInsets.only(right: 3.3),
+                                    child: Text(transactions[index][2][0].toString(),style: TextStyle(color: Colors.green),)),
+                                Text(transactions[index][3],style: TextStyle(color: Colors.green),),
+                              ],
+                            ),):Container(
+                              margin: const EdgeInsets.only(right: 12.3),
+
+                              child: Row(
                                 children: [
                                   Container(
-
-                                      margin: EdgeInsets.only(right: 3.3),
-                                      child: Text(transactions[index][2][0].toString(),style: TextStyle(color: Colors.green),)),
-                                  Text(transactions[index][3],style: TextStyle(color: Colors.green),),
+                                      margin: const EdgeInsets.only(right: 3.3),
+                                      child: Text(transactions[index][2][0].toString(),style: TextStyle(color: Colors.red),)),
+                                    Text(transactions[index][3],style: TextStyle(color: Colors.red),),
                                 ],
-                              ),):Container(
-                                margin: EdgeInsets.only(right: 12.3),
-
-                                child: Row(
-                                  children: [
-                                    Container(
-                                        margin: EdgeInsets.only(right: 3.3),
-                                        child: Text(transactions[index][2][0].toString(),style: TextStyle(color: Colors.red),)),
-                                      Text(transactions[index][3],style: TextStyle(color: Colors.red),),
-                                  ],
-                                ),
                               ),
-                            ],
-                          ),
-                        );
-                      }),
-                );
+                            ),
+                          ],
+                        ),
+                      );
+                    });
               }
               return Container();
             },
@@ -383,7 +372,7 @@ class _HomeState extends State<Home> {
   get_dates(List<QueryDocumentSnapshot<Object?>> userinvestments,
       String? selectedValue,) {
     DateTime? date;
-    List all_dates = [];
+    List allDates = [];
     List dates = [];
     if (selectedValue != null) {
       for (int i = 0; i < userinvestments.length; i++) {
@@ -393,7 +382,7 @@ class _HomeState extends State<Home> {
                 .get("CreatedAt")
                 .microsecondsSinceEpoch);
             dates.add(date);
-            all_dates = get_sort(dates);
+            allDates = get_sort(dates);
           }
         }
 
@@ -403,7 +392,7 @@ class _HomeState extends State<Home> {
                 .get("CreatedAt")
                 .microsecondsSinceEpoch);
             dates.add(date);
-            all_dates = get_sort(dates);
+            allDates = get_sort(dates);
           }
           else {
             if (userinvestments[i].get("status") == "Accept") {
@@ -411,17 +400,17 @@ class _HomeState extends State<Home> {
                   .get("CreatedAt")
                   .microsecondsSinceEpoch);
               dates.add(date);
-              all_dates = get_sort(dates);
+              allDates = get_sort(dates);
             }
           }
         }
       }
     }
-    return all_dates;
+    return allDates;
   }
 
   get_sort(List dates) {
-    List format_dates = [];
+    List formatDates = [];
     for (int i = 0; i < dates.length; i++) {
       dates.sort((a, b) {
         return a.compareTo(b);
@@ -441,23 +430,21 @@ class _HomeState extends State<Home> {
     return days;
   }
 
-  get_transactions(dates, String? selectedValue, List selected_dates,
+  get_transactions(dates, String? selectedValue, List selectedDates,
       List<QueryDocumentSnapshot> userinvestments) {
-    List format_dates = [];
-    List all_transactions = [];
-    List all_dates = [];
+    List formatDates = [];
+    List allTransactions = [];
     String symbol;
-    List afterSort = [];
     String? dateformat;
 
-    for (int i = 0; i < selected_dates.length; i++) {
-      format_dates.add(DateFormat('dd/MM/yyyy').format(selected_dates[i]));
+    for (int i = 0; i < selectedDates.length; i++) {
+      formatDates.add(DateFormat('dd/MM/yyyy').format(selectedDates[i]));
     }
 
     for(int j=0;j<dates.length;j++){
        dateformat = DateFormat('dd/MM/yyyy').format(dates[j]);
-       for(int k=0;k<format_dates.length;k++){
-          if(dateformat==format_dates[k]){
+       for(int k=0;k<formatDates.length;k++){
+          if(dateformat==formatDates[k]){
             for(int l =0;l<userinvestments.length;l++){
             DateTime dateTime = userinvestments[l].get("CreatedAt").toDate();
               if(userinvestments[l].get("status")=="Accept"&&dates[j]==dateTime){
@@ -468,13 +455,13 @@ class _HomeState extends State<Home> {
                 else{
                   symbol= " - ";
                 }
-               all_transactions.add([dateformat,userinvestments[l].get("username"),[symbol],userinvestments[l].get("InvestAmount")]);
+               allTransactions.add([dateformat,userinvestments[l].get("username"),[symbol],userinvestments[l].get("InvestAmount")]);
               }
             }
           }
        }
     }
-     return all_transactions;
+     return allTransactions;
   }
 
 get_data(List transactions) async {
@@ -495,12 +482,11 @@ get_data(List transactions) async {
     row.add(transactions[i][2][0] + transactions[i][3]);
     rows.add(row);
    }
-  String? csv =  ListToCsvConverter().convert(rows);
+  String? csv =  const ListToCsvConverter().convert(rows);
   String dir;
 
   dir = await ExternalPath.getExternalStoragePublicDirectory(
       ExternalPath.DIRECTORY_DOWNLOADS);
-  print("dir $dir");
   String file = "$dir";
 
   File f = File(file + "/$dates- $end.csv");

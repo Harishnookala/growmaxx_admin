@@ -237,8 +237,18 @@ class _Pan_deatilsState extends State<Pan_deatils> {
           imageurl = await imageurl;
 
           if (formKey.currentState!.validate()) {
-            if (image != null && imageurl != null && selected_value != null) {
+            String? bank_id;
+            String? id = await get_id();
+            bank_id = id;
+            if(id ==null){
+              bank_id = "1000";
+            }
+            else if(id!=null){
+              var bank = int.parse(bank_id!)+1;
+              bank_id = bank.toString();
+            }
 
+            if (image != null && imageurl != null && selected_value != null) {
               Map<String, dynamic> data = {
                 "accountnumber": widget.accountnumber,
                 "ifsc": widget.Ifsc,
@@ -248,12 +258,13 @@ class _Pan_deatilsState extends State<Pan_deatils> {
                 "validationproof": imageurl,
                 "proof": selected_value,
                 "status": "pending",
+                "username":null,
               };
               setState(() {
                 inprogress = true;
               });
-              var bank_details = await FirebaseFirestore.instance.collection(
-                  "bank_details").doc(widget.phonenumber).set(data);
+           await FirebaseFirestore.instance.collection(
+                  "bank_details").doc(bank_id.toString()).set(data);
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) =>
@@ -516,6 +527,18 @@ class _Pan_deatilsState extends State<Pan_deatils> {
       });
     }
   }
-
+  get_id() async{
+    var id;
+    var data  = await FirebaseFirestore.instance.collection("bank_details").get();
+    for(int i =0;i<data.docs.length;i++){
+      id = data.docs[i].id;
+    }
+    if(id!=null){
+      return id;
+    }
+    else{
+      return null;
+    }
+  }
 }
 

@@ -43,34 +43,32 @@ class adminPannelState extends State<adminPannel>{
                   Row(
                     children: [
                       Container(
-                        child: new Tab(child: Text("Home"),),
-                      ),
+                         child:  const Tab(child:  Text("Home",style:  const TextStyle(fontFamily: "Poppins-Medium",fontSize: 15)),),
+                       ),
                     ],
                   ),
-                  Container(
+                  const SizedBox(
                     width: 80,
-                    child: new Tab(child: Text("Funds"),),
+                    child:  Tab(child: Text("Funds",style: TextStyle(fontFamily: "Poppins-Medium")),),
                   ),
                   Container(
-
-                    child: new Tab(child: Text("profit & loss"),),
+                    child:  const Tab(child: Text("Profit  & Loss",style: TextStyle(fontFamily: "Poppins-Medium"),),),
                   ),
                   Container(
-
-                    child: new Tab(child: Text(" Bank Request"),),
+                    child:  const Tab(child: Text(" Bank Request",style: const TextStyle(fontFamily: "Poppins-Medium")),),
                   ),
                 ],
               ),],
             ),
           ),
         ),
-         body: TabBarView(
-           physics: BouncingScrollPhysics(),
+         body: const TabBarView(
+           physics: const BouncingScrollPhysics(),
            children: [
-             Home(),
-             Funds(),
-             profit(),
-             Users()
+             const Home(),
+             const Funds(),
+             const profit(),
+             const Users()
 
            ],
          )

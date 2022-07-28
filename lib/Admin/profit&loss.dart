@@ -24,16 +24,17 @@ class _profitState extends State<profit> {
       margin: EdgeInsets.all(12.3),
       child: Column(
         children:  [
-          SizedBox(height: 10,),
-          Text("Today Profits",style: TextStyle(color: Colors.pinkAccent),),
-          Divider(thickness: 0.6,color: Colors.black,),
+          const SizedBox(height: 10,),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 15),
+              child: const Text("Today Profits",style: TextStyle(color: Colors.pinkAccent,fontSize: 16),)),
+          const Divider(thickness: 0.6,color: Colors.black,),
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 15,horizontal: 5),
             child: Row(
               children: [
-                Text("Today Status :"),
+                const Text("Today Status  : - " ,style: TextStyle(fontSize: 15),),
                 Container(
-                  margin: EdgeInsets.only(left: 18.3),
+                  margin: EdgeInsets.only(left: 13.3),
                   child: build_percentage(),
                 ),
 
@@ -44,7 +45,7 @@ class _profitState extends State<profit> {
             child: Center(
               child: TextButton(
                 style: TextButton.styleFrom(
-                  minimumSize: Size(130, 3),
+                  minimumSize: const Size(130, 3),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.3)),
                     backgroundColor: Colors.green.shade400),
                 onPressed: ()async{

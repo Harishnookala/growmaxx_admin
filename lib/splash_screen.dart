@@ -25,7 +25,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/app_image.jpg",),fit: BoxFit.cover)),
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/splash_screen.jpg",),
+            alignment: Alignment.topLeft,
+            fit: BoxFit.cover)),
       ),
     );
   }

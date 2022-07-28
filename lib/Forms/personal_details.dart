@@ -53,7 +53,13 @@ class _personal_detailsState extends State<personal_details> {
                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 20,),
+                    SizedBox(height: 18,),
+                   Container(
+                     margin: EdgeInsets.only(bottom: 12.3),
+                     child: InkWell(onTap: (){
+                       Navigator.pop(context);
+                     }, child: Icon(Icons.arrow_back_ios_new_outlined,color: Colors.blue,)),
+                   ),
                     Divider(height: 1, thickness: 1.5, color: Colors.green.shade400),
                     Container(
                         margin: EdgeInsets.all(5.3),
@@ -73,6 +79,7 @@ class _personal_detailsState extends State<personal_details> {
                     Expanded(
                       child: ListView(
                         shrinkWrap: true,
+                        padding: EdgeInsets.only(top: 12.3),
                         scrollDirection: Axis.vertical,
                         children: [
                           Container(
@@ -207,7 +214,6 @@ class _personal_detailsState extends State<personal_details> {
 
   build_name() {
     return SizedBox(
-      height: 53,
       width: MediaQuery.of(context).size.width/1.2,
       child: TextFormField(
         style: TextStyle(fontFamily: "Poppins-Light",),
@@ -219,6 +225,7 @@ class _personal_detailsState extends State<personal_details> {
         },
         controller: nameController,
         decoration: InputDecoration(
+            contentPadding:  EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.tealAccent, width: 1.8),
             ),
@@ -238,12 +245,13 @@ class _personal_detailsState extends State<personal_details> {
 
   build_Lastname() {
     return SizedBox(
-      height: 53,
+
       width: MediaQuery.of(context).size.width/1.2,
       child: TextFormField(
         style: TextStyle(fontFamily: "Poppins-Light",),
         controller: lastNameContoller,
         decoration: InputDecoration(
+            contentPadding:  EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.tealAccent, width: 1.8),
             ),
@@ -264,7 +272,6 @@ class _personal_detailsState extends State<personal_details> {
 
   buildGender() {
     return SizedBox(
-      height: 53,
       width: MediaQuery.of(context).size.width/1.2,
       child: Container(
         child: DropdownButtonHideUnderline(
@@ -484,6 +491,7 @@ class _personal_detailsState extends State<personal_details> {
         style: TextStyle(fontFamily: "Poppins-Light",),
         controller: fatherNameContoller,
         decoration: InputDecoration(
+            contentPadding:  EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.tealAccent, width: 1.8),
             ),
@@ -508,6 +516,7 @@ class _personal_detailsState extends State<personal_details> {
         style: TextStyle(fontFamily: "Poppins-Light",),
         controller: motherNameContoller,
         decoration: InputDecoration(
+            contentPadding:  EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
             focusedBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.tealAccent, width: 1.8),
             ),
@@ -538,7 +547,7 @@ class _personal_detailsState extends State<personal_details> {
         ),
         onPressed: (){
           print(image);
-           if(image!=null&&nameController.text!=null&&selected_value!=null&&formKey.currentState!.validate())
+           if(image!=null&&status!=null&&selected_value!=null&&formKey.currentState!.validate())
              Navigator.push(
                context,
                MaterialPageRoute(builder: (context) =>
