@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/adminPannel.dart';
 import 'Forms/personal_details.dart';
@@ -14,6 +16,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    var values = FirebaseAuth.instance.signInAnonymously();
+    print(values);
     super.initState();
      Timer(
         const Duration(seconds: 5),
@@ -26,8 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body: Container(
         decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/splash_screen.jpg",),
-            alignment: Alignment.topLeft,
-            fit: BoxFit.cover)),
+
+            fit: BoxFit.fill)),
       ),
     );
   }

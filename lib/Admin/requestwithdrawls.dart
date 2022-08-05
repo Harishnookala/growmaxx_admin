@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/withdrawl_details.dart';
+import 'package:intl/intl.dart';
 
 class Requestwithdrawl extends StatefulWidget {
   const Requestwithdrawl({Key? key}) : super(key: key);
@@ -18,6 +19,8 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
   var rejected = false;
   int pressedaccepted = -1;
   int pressedrejectd = -1;
+  var formatter = NumberFormat('#,##0.${"#" * 5}');
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,7 +54,7 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
                             child: ListView.builder(
                               itemCount: snap.data!.docs.length,
                               shrinkWrap: true,
-                              physics: const ScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 var withdrawl = snap.data!.docs;
                                 return withdrawl[index].get("status") ==
@@ -70,11 +73,11 @@ class _RequestwithdrawlState extends State<Requestwithdrawl> {
                                                Container(
                                                  alignment: Alignment.topLeft,
                                                  child: Text(withdrawl[index]
-                                                     .get("username"),style: TextStyle(color: Colors.blueGrey),),
+                                                     .get("username"),style: TextStyle(color: Colors.black),),
                                                ),
                                                Container(
-                                                 child: Text(" - "+withdrawl[index]
-                                                     .get("InvestAmount"),style: TextStyle(color: Colors.red),),
+                                                 child: Text(" - "+ formatter.format(double.parse(withdrawl[index].get("InvestAmount"))),
+                                                   style: TextStyle(color: Colors.red,fontSize: 15,fontFamily: "Poppins-Medium"),),
                                                  alignment: Alignment.topLeft,
                                                ),
                                                Container(

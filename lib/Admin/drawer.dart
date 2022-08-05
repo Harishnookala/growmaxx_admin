@@ -5,6 +5,8 @@ import 'package:growmaxx_admin/Admin/shownupi.dart';
 import 'package:growmaxx_admin/Admin/upi.dart';
 import 'package:growmaxx_admin/Admin/user_details.dart';
 import 'package:growmaxx_admin/Forms/personal_details.dart';
+
+import 'investedamounts.dart';
 class build_drawer extends StatefulWidget {
    build_drawer({Key? key}) : super(key: key);
 
@@ -46,7 +48,7 @@ class _build_draweState extends State<build_drawer> {
                 MaterialPageRoute(builder: (context) =>  user_details()),
               );
             },
-            child: Text("Users"),
+            child: Text("Users",style: TextStyle(color: Colors.purple.shade400,fontFamily: "Poppins-Medium"),),
           ),
         ),
         Container(
@@ -57,15 +59,26 @@ class _build_draweState extends State<build_drawer> {
                 MaterialPageRoute(builder: (context) =>  personal_details()),
               );
             },
-            child: Text(" +  Create Account"),
+            child: Text(" +  Create Account",style: TextStyle(color: Colors.purple.shade400,fontFamily: "Poppins-Medium")),
+          ),
+        ),
+        Container(
+          child: TextButton(
+            onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  investedAmount()),
+              );
+            },
+            child: Text("  Invested Amounts",style: TextStyle(color: Colors.purple.shade400,fontFamily: "Poppins-Medium")),
           ),
         ),
         Container(
           child: TextButton(
             onPressed: () async{
               var value = await FirebaseFirestore.instance.collection("Upi").doc("upi").get();
-              print(value);
-              if(value==null){
+
+              if(!value.exists){
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) =>  upi()),
@@ -78,9 +91,10 @@ class _build_draweState extends State<build_drawer> {
                 );
               }
             },
-            child: Text("Upi id"),
+            child: Text("Upi id",style: TextStyle(color: Colors.purple.shade400,fontFamily: "Poppins-Medium")),
           ),
-        )
+        ),
+
       ],
     );
   }

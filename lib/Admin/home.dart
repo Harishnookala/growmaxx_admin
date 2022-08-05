@@ -159,21 +159,22 @@ class _HomeState extends State<Home> {
 
           ],
         ),
+        SizedBox(height: 15,),
         Center(
           child: TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: Colors.green,
                 elevation: 0.6,
-                minimumSize: const Size(120, 30),
+                minimumSize: const Size(150, 40),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.3)),),
+                    borderRadius: BorderRadius.circular(20.3)),),
               onPressed: () {
                 setState(() {
                   pressed = true;
                 });
               },
               child: const Text("Submit", style: TextStyle(color: Colors
-                  .white),)),
+                  .white,fontSize: 17),)),
         ),
         pressed == true ? Column(
           children: [
@@ -189,7 +190,7 @@ class _HomeState extends State<Home> {
             Divider(color: Colors.grey,),
             ListView(
               shrinkWrap: true,
-              physics: const ScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               children: [
                 get_alltransactions(),
               ],
@@ -319,7 +320,7 @@ class _HomeState extends State<Home> {
                 List dates = get_dates(userinvestments, selectedValue);
                 transactions = get_transactions(dates, selectedValue, selectedDates, userinvestments);
                 return ListView.builder(
-                  physics: const ScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: transactions.length,
                     padding: EdgeInsets.zero,

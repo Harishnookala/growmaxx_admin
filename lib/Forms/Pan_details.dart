@@ -7,13 +7,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/repositories/authentication.dart';
 import 'package:growmaxx_admin/Admin/adminPannel.dart';
+import 'package:growmaxx_admin/wrappers.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Pan_deatils extends StatefulWidget {
   String?phonenumber;
   String?accountnumber;
   String?Ifsc;
-   Pan_deatils({Key? key,this.phonenumber,this.accountnumber,this.Ifsc}) : super(key: key);
+  String?name;
+   Pan_deatils({Key? key,this.name,this.phonenumber,this.accountnumber,this.Ifsc}) : super(key: key);
 
   @override
   _Pan_deatilsState createState() => _Pan_deatilsState();
@@ -33,6 +35,7 @@ class _Pan_deatilsState extends State<Pan_deatils> {
   Authentication authentication = Authentication();
   final formKey = GlobalKey<FormState>();
  bool inprogress = false;
+ bool pressed = true;
   @override
   Widget build(BuildContext context) {
     print(widget.Ifsc);
@@ -65,7 +68,7 @@ class _Pan_deatilsState extends State<Pan_deatils> {
                   margin: EdgeInsets.only(left: 12.3,top: 12.3),
                   child: ListView(
                     shrinkWrap: true,
-                    physics: ScrollPhysics(),
+                    physics: BouncingScrollPhysics(),
                     children: [
                       Container(
                         child: const Text(
@@ -106,7 +109,32 @@ class _Pan_deatilsState extends State<Pan_deatils> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                         build_button(),
+                         pressed==true?build_button():Center(
+                           child: Row(
+                             crossAxisAlignment:
+                             CrossAxisAlignment.center,
+                             mainAxisAlignment:
+                             MainAxisAlignment.center,
+                             children: [
+                               Container(
+                                 decoration: BoxDecoration(
+                                     color: Colors.grey,
+                                     borderRadius:
+                                     BorderRadius.circular(
+                                         25.3)),
+                                 child: Center(
+                                     child: Text("Save & Continue",
+                                         style: TextStyle(
+                                             color: Colors.white,
+                                             fontSize: 16),
+                                         textAlign:
+                                         TextAlign.center)),
+                                 width: 180,
+                                 height: 40,
+                               ),
+                             ],
+                           ),
+                         ),
                          inprogress?Padding(padding: EdgeInsets.only(left: 12.3),
                           child: CircularProgressIndicator(),
                          ):Container()
@@ -127,17 +155,19 @@ class _Pan_deatilsState extends State<Pan_deatils> {
   build_panNumber() {
     return Container(
       child: SizedBox(
-
-        //width: MediaQuery.of(context).size.width / 1.2,
         child: TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           style: const TextStyle(
             fontFamily: "Poppins-Light",
+            letterSpacing: 0.6
           ),
-
+         inputFormatters: [
+           UpperCaseTextFormatter()
+         ],
           controller: panNumberController,
           validator: (value) {
             if (value == null || value.isEmpty||value.length!=10) {
-              return 'Please enter Pan number';
+              return 'Please enter Correct Pan number';
             }
             return null;
           },
@@ -220,66 +250,6 @@ class _Pan_deatilsState extends State<Pan_deatils> {
         image =  authentication.bank_details(imageFile, name);
       });
     }
-  }
-  build_button() {
-    return Container(
-      alignment: Alignment.center,
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.green,
-          minimumSize: Size(80, 20),
-          elevation: 1.0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.6)),
-
-        ),
-        onPressed: () async {
-          image = await image;
-          imageurl = await imageurl;
-
-          if (formKey.currentState!.validate()) {
-            String? bank_id;
-            String? id = await get_id();
-            bank_id = id;
-            if(id ==null){
-              bank_id = "1000";
-            }
-            else if(id!=null){
-              var bank = int.parse(bank_id!)+1;
-              bank_id = bank.toString();
-            }
-
-            if (image != null && imageurl != null && selected_value != null) {
-              Map<String, dynamic> data = {
-                "accountnumber": widget.accountnumber,
-                "ifsc": widget.Ifsc,
-                "phonenumber": widget.phonenumber,
-                "pannumber": panNumberController.text,
-                "image": image,
-                "validationproof": imageurl,
-                "proof": selected_value,
-                "status": "pending",
-                "username":null,
-              };
-              setState(() {
-                inprogress = true;
-              });
-           await FirebaseFirestore.instance.collection(
-                  "bank_details").doc(bank_id.toString()).set(data);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) =>
-                    adminPannel(
-                     selectedPage: 0,
-                    )),
-              );
-            }
-          }
-        },
-        child: Container(
-            margin: EdgeInsets.only(left: 5.3,right: 5.3),
-            child: Text("Save & Continue",style: TextStyle(color: Colors.white,fontFamily: "Poppins-Medium"),)),
-      ),
-    );
   }
 
   get_permissions() {
@@ -540,5 +510,65 @@ class _Pan_deatilsState extends State<Pan_deatils> {
       return null;
     }
   }
+  build_button() {
+    return Container(
+      alignment: Alignment.center,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.green,
+          minimumSize: Size(85, 20),
+          elevation: 1.0,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.6)),
+
+        ),
+        onPressed: () async {
+          if (formKey.currentState!.validate()) {
+            if (image_path != null && imageFile != null && selected_value != null) {
+              setState(() {
+                pressed = false;
+                inprogress = true;
+              });
+              image = await image;
+              imageurl = await imageurl;
+              String? bank_id;
+              String? id = await get_id();
+              bank_id = id;
+              if (id == null) {
+                bank_id = "1000";
+              } else if (id != null) {
+                var bank = int.parse(bank_id!) + 1;
+                bank_id = bank.toString();
+              }
+              Map<String, dynamic> data = {
+                "name": widget.name,
+                "accountnumber": widget.accountnumber,
+                "ifsc": widget.Ifsc,
+                "phonenumber": widget.phonenumber,
+                "pannumber": panNumberController.text,
+                "image": image,
+                "validationproof": imageurl,
+                "proof": selected_value,
+                "status": "pending",
+                "username": null,
+              };
+              await FirebaseFirestore.instance
+                  .collection("bank_details").doc(bank_id.toString()).set(data);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => adminPannel(selectedPage: 0,)),
+              );
+            }
+          }
+
+
+        },
+        child: Container(
+            margin: EdgeInsets.only(left: 5.3,right: 5.3),
+            child: Text("Save & Continue",style: TextStyle(color: Colors.white,fontFamily: "Poppins-Medium"),)),
+      ),
+    );
+  }
+
 }
 

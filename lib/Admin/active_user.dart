@@ -12,7 +12,8 @@ import 'package:flutter/services.dart';
 
 class Active_user extends StatefulWidget {
   String? id;
-  Active_user({Key? key, this.id}) : super(key: key);
+  String?name;
+  Active_user({Key? key, this.id,this.name}) : super(key: key);
 
   @override
   State<Active_user> createState() => _Active_userState();
@@ -37,6 +38,7 @@ class _Active_userState extends State<Active_user> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.name);
     var user =
         FirebaseFirestore.instance.collection("Users").doc(widget.id).get();
     Authentication authentication = Authentication();
@@ -240,9 +242,8 @@ class _Active_userState extends State<Active_user> {
                                                     Text(bank_details.get("ifsc"))
                                                   ],
                                                 ),
-                                                const SizedBox(
-                                                  height: 15,
-                                                ),
+                                                SizedBox(height: 10,),
+
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       bottom: 5.6),

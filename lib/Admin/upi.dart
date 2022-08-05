@@ -17,20 +17,33 @@ class _upiState extends State<upi> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Column(
-          children:  [
-            const SizedBox(height: 50,),
-            Container(
-              margin: EdgeInsets.only(left: 5.3,bottom: 12.3),
-              alignment: Alignment.topLeft,
-              child: Text("Upi id",style: TextStyle(color: Colors.orangeAccent,fontFamily: "Poppins-Medium"),),
-            ),
-           Center(child: build_textfield(),),
-          SizedBox(height: 20,),
-          Center(child: build_button(),),
-            SizedBox(height: 40,),
+        body: Container(
+          margin: EdgeInsets.all(12.3),
+          child: Column(
+            children:  [
+              SizedBox(height: 25,),
+              Container(
+                alignment: Alignment.topLeft,
+                child: InkWell(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Icon(Icons.arrow_back_ios_new_outlined,color: Colors.blue),
+                ),
+              ),
+              SizedBox(height: 20,),
+              Container(
+                margin: EdgeInsets.only(left: 5.3,bottom: 12.3),
+                alignment: Alignment.topLeft,
+                child: Text("Upi id",style: TextStyle(color: Colors.orangeAccent,fontFamily: "Poppins-Medium"),),
+              ),
+             Center(child: build_textfield(),),
+            SizedBox(height: 20,),
+            Center(child: build_button(),),
+              SizedBox(height: 40,),
 
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -69,8 +82,8 @@ class _upiState extends State<upi> {
 
   build_button() {
     return TextButton(
-      style: TextButton.styleFrom(minimumSize: Size(160, 40),
-       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.5),),
+      style: TextButton.styleFrom(minimumSize: Size(130, 40),
+       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.5),),
         backgroundColor: Colors.green
       ),
       onPressed: () async {

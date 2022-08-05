@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/repositories/authentication.dart';
+import 'package:growmaxx_admin/wrappers.dart';
 
 import 'Pan_details.dart';
 
 class BankAccount extends StatefulWidget {
+  String?firstname;
   String?phonenumber;
-   BankAccount({this.phonenumber});
+   BankAccount({this.phonenumber,this.firstname});
 
   @override
   _BankAccountState createState() => _BankAccountState();
@@ -176,6 +178,9 @@ class _BankAccountState extends State<BankAccount> {
       width: MediaQuery.of(context).size.width/1.2,
       child: TextFormField(
         style: TextStyle(fontFamily: "Poppins-Light",),
+        inputFormatters: [
+          UpperCaseTextFormatter()
+        ],
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter some text';
@@ -217,7 +222,7 @@ class _BankAccountState extends State<BankAccount> {
          if (formKey.currentState!.validate()){
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    Pan_deatils(phonenumber: widget.phonenumber,accountnumber: accountNumbeController.text,Ifsc: Ifsc.text,)));
+                    Pan_deatils(name:widget.firstname,phonenumber: widget.phonenumber,accountnumber: accountNumbeController.text,Ifsc: Ifsc.text,)));
           }
         },
         child: Container(

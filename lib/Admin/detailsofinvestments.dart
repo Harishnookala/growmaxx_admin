@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'adminPannel.dart';
 
 class detailInvestments extends StatefulWidget {
@@ -14,6 +15,7 @@ class detailInvestmentsState extends State<detailInvestments> {
   bool? accepted =false;
 
   bool ?rejected =false;
+  var formatter = NumberFormat('#,##0.${"#" * 5}');
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class detailInvestmentsState extends State<detailInvestments> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             const Text("InvestAmount"),
-                            Text(investment.get("InvestAmount"))
+                            Text(formatter.format(double.parse(investment.get("InvestAmount"))))
                           ],
                         ),
                         const SizedBox(height: 20,),
@@ -213,6 +215,10 @@ class detailInvestmentsState extends State<detailInvestments> {
                   .collection("requestInvestments")
                   .doc(id)
                   .update(statusupdate);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) => adminPannel(
+                    selectedPage: 1,
+                  )));
             },
             child: rejected == true
                 ? const Text("Rejected",style: TextStyle(color: Colors.white,fontFamily: "Poppins-Medium",fontWeight: FontWeight.w900),)

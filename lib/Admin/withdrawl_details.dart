@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'adminPannel.dart';
 
@@ -17,6 +18,8 @@ class withdrawl_details extends StatefulWidget {
 class _withdrawl_detailsState extends State<withdrawl_details> {
   bool accepted = false;
   bool rejected = false;
+  var formatter = NumberFormat('#,##0.${"#" * 5}');
+
   @override
   Widget build(BuildContext context) {
     var user = FirebaseFirestore.instance
@@ -76,8 +79,13 @@ class _withdrawl_detailsState extends State<withdrawl_details> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
-                                        Text("InvestAmout : -"),
-                                        Text(invest.get("InvestAmount")),
+                                        Text("InvestAmount : -"),
+                                        Text(" +  " +formatter.format(double.parse(invest.get("InvestAmount"))),
+                                         style: TextStyle(fontFamily: "Poppins-Medium",
+                                             color: Colors.lightBlue,
+                                             fontSize: 15,
+                                             fontWeight: FontWeight.bold),
+                                        ),
                                       ],
                                     ),
                                     SizedBox(height: 40,),
@@ -85,7 +93,11 @@ class _withdrawl_detailsState extends State<withdrawl_details> {
                                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         Text("Withdrawl Amount : - "),
-                                        Text(widget.withdrawl!),
+                                        Text(" - " + formatter.format(double.parse(widget.withdrawl!)),
+                                          style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,
+                                           fontSize: 16
+                                          ),
+                                        ),
                                       ],
                                     ),
 

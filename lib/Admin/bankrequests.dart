@@ -45,7 +45,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
                         children: [
                                  ListView(
                                   shrinkWrap: true,
-                                  physics: const ScrollPhysics(),
+                                  physics: const BouncingScrollPhysics(),
                                   children: [
                                     Container(
                                       margin: EdgeInsets.only(top: 20.3),

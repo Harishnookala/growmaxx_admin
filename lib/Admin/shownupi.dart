@@ -31,7 +31,7 @@ class _shownupiState extends State<shownupi> {
               FutureBuilder<DocumentSnapshot>(
                 future: upi,
                 builder: (context,snap){
-                  if(snap.hasData){
+                  if(snap.hasData&&snap.data!.exists){
                      details = snap.data;
                     return Column(
                       children: [

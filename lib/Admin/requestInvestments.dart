@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'detailsofinvestments.dart';
 
@@ -18,6 +19,8 @@ class _requestInvestmentsState extends State<requestInvestments> {
   var rejected = false;
   int pressedaccepted = -1;
   int pressedrejectd = -1;
+  var formatter = NumberFormat('#,##0.${"#" * 5}');
+
   @override
   Widget build(BuildContext context) {
     TimeOfDay endTime = const TimeOfDay(hour: 23, minute:59 );
@@ -60,7 +63,7 @@ class _requestInvestmentsState extends State<requestInvestments> {
                           child: ListView.builder(
                             itemCount: snap.data!.docs.length,
                             shrinkWrap: true,
-                            physics: ScrollPhysics(),
+                            physics: BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               var investments = snap.data!.docs;
                               return investments[index].get("status") == "pending"
@@ -76,8 +79,9 @@ class _requestInvestmentsState extends State<requestInvestments> {
                                             child: Text(investments[index].get("username")),),
                                           Container(
                                             margin: EdgeInsets.only(left: 8.3),
-                                            child: Text(" + "+investments[index].get("InvestAmount"),
-                                              style: TextStyle(color: Colors.green),),),
+                                            child: Text(formatter.format(double.parse(
+                                                investments[index].get("InvestAmount").replaceAll(",", ""))),
+                                              style: TextStyle(color: Colors.green,fontFamily: "Poppins-Medium",fontSize: 15),),),
                                           Container(
                                             child: Row(
                                               children: [

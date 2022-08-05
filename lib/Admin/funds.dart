@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/requestInvestments.dart';
 import 'package:growmaxx_admin/Admin/requestwithdrawls.dart';
 
-
-
 class Funds extends StatefulWidget {
   const Funds({Key? key}) : super(key: key);
 
@@ -24,51 +22,44 @@ class _FundsState extends State<Funds> {
   @override
   Widget build(BuildContext context) {
     return Container(
-       // margin: EdgeInsets.all(5.3),
-    child: DefaultTabController(
-         length: 2,
+      // margin: EdgeInsets.all(5.3),
+      child: DefaultTabController(
+        length: 2,
         initialIndex: 0,
-       child: Column(
-         crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          child: TabBar(
-            physics: BouncingScrollPhysics(),
-            labelColor: Colors.green,
-            unselectedLabelColor: Colors.black54,
-            tabs: [
-              Tab(text: 'Investment Requests'),
-              Tab(text: 'Withdrawl Requests'),
-            ],
-          ),
-        ),
-      Container(
-        decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey, width: 0.5))
-        ),),
-
-     
-       Expanded(
-         child: TabBarView(
-           physics: BouncingScrollPhysics(),
-           children: [
-                Container(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              child: TabBar(
+                physics: BouncingScrollPhysics(),
+                labelColor: Colors.green,
+                unselectedLabelColor: Colors.black54,
+                tabs: [
+                  Tab(text: 'Investment Requests'),
+                  Tab(text: 'Withdrawl Requests'),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  border:
+                      Border(top: BorderSide(color: Colors.grey, width: 0.5))),
+            ),
+            Expanded(
+              child: TabBarView(
+                physics: BouncingScrollPhysics(),
+                children: [
+                  Container(
                     child: requestInvestments(),
-                   margin: EdgeInsets.only(top:6.3),
-                ),
-                 Requestwithdrawl()
-              ],
-          
-          ),
-       ),
-
-    ],
-    ),
-    ),
+                    margin: EdgeInsets.only(top: 6.3),
+                  ),
+                  Requestwithdrawl()
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
-
-
 }
-
-
