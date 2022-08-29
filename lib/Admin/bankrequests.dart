@@ -223,7 +223,7 @@ class _BankingrequestsState extends State<Bankingrequests> {
     var details = bank_details.get("username");
     Map<String,dynamic>updatedata ={};
     Map<String,dynamic>user_data ={};
-    String smallstring = widget.phonenumber.toString().substring(6,10);
+    String smallstring = widget.phonenumber.toString().substring(4,10);
     String username = "GM$smallstring";
     if(details ==null){
       updatedata={

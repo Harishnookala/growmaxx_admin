@@ -45,8 +45,7 @@ class _personal_detailsState extends State<personal_details> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 20,),
-                InkWell(
+                SizedBox(height: MediaQuery.of(context).size.height/16),                InkWell(
                   onTap: (){
                     Navigator.pop(context);
                   },

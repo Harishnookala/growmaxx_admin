@@ -54,6 +54,7 @@ class _AddressState extends State<Address> {
             child: ListView(
               shrinkWrap: true,
               children: [
+                SizedBox(height: MediaQuery.of(context).size.height/16),
                 Column(
                   children: [
                     Divider(height: 1, thickness: 1.5, color: Colors.green.shade400),

@@ -81,8 +81,8 @@ class _BankAccountState extends State<BankAccount> {
                       build_reEnternumber(),
                       SizedBox(height: 15,),
                       Container(
-                        child: const Text(
-                          "Ifsc  : -",
+                        child:  Text(
+                          "Ifsc  : -".toUpperCase(),
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.deepOrangeAccent,
