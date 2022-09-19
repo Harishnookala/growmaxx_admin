@@ -8,8 +8,8 @@ class investedAmount extends StatefulWidget {
 }
 
 class _investedAmountState extends State<investedAmount> {
-
   var invest = FirebaseFirestore.instance.collection("Investments").get();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,7 +31,7 @@ class _investedAmountState extends State<investedAmount> {
                   child: Icon(Icons.arrow_back_ios_new_outlined,color: Colors.blue,),
                 ),
               ),
-              SizedBox(height: 8,),
+              SizedBox(height: 9,),
               Divider(height: 1, thickness: 1.5, color: Colors.green.shade400),
               Container(
                   margin: EdgeInsets.all(3.3),
@@ -74,10 +74,11 @@ class _investedAmountState extends State<investedAmount> {
                                margin: EdgeInsets.only(bottom: 15.3),
                                child: Row(
                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                 crossAxisAlignment: CrossAxisAlignment.center,
                                  children: [
-                                   Text(amount.get("username")),
-                                   Text(amount.get("phonenumber")),
-                                   Text("₹ "+amount.get("InvestAmount"))
+                                   Text(amount.get("username"),style: TextStyle(fontFamily: "Poppins",fontSize: 13.8),),
+                                   Text(amount.get("phonenumber"),style: TextStyle(fontFamily: "Poppins",fontSize: 13.8)),
+                                   Text("₹ "+amount.get("InvestAmount"),style: TextStyle(fontFamily: "Poppins",fontSize: 13.8))
                                  ],
                                ),
                              );

@@ -20,7 +20,7 @@ class _UsersState extends State<Users> {
     var details =
         FirebaseFirestore.instance.collection("bank_details").snapshots();
     var users = FirebaseFirestore.instance.collection("Users").snapshots();
-
+  print("Harish");
     return Container(
         margin: EdgeInsets.all(12.3),
         child: Column(
