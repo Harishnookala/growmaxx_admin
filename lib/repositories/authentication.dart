@@ -76,10 +76,6 @@ class Authentication {
     }
   }
 
-  Future<String>get_investments(String? name) async {
-    var value = await FirebaseFirestore.instance.collection("Investments").doc(name).get();
-    var amount = value.get("InvestAmount");
-    return amount;
-  }
+
 
 }

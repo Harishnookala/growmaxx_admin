@@ -64,19 +64,7 @@ class _HomeState extends State<Home> {
                           style: TextStyle(color: Colors.orange, fontWeight: FontWeight.w600, fontSize: 16)),
                     ),
                     const SizedBox(height: 10,),
-                    StreamBuilder<QuerySnapshot>(
-                      stream: investments,
-                      builder: (context, snap) {
-                        if (snap.hasData && snap.requireData.docs.length > 0) {
-                          var investments = snap.data;
-                          double total = get_total(investments);
-                          var after = formatter.format(total).replaceAll(" ", " ,  ");
-                          return Text("₹ ${after.toString().replaceAll(" ", ",")}",style:
-                          const TextStyle(color: Colors.green,fontWeight: FontWeight.w500,fontSize: 16),);
-                        }
-                        return Container();
-                      },
-                    ),
+
                     const SizedBox(height: 10,),
 
                   ],

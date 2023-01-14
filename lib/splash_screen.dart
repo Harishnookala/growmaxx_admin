@@ -30,7 +30,6 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Colors.white,
       body: Container(
         decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/Images/splash_screen.jpg",),
-
             fit: BoxFit.cover)),
       ),
     );

@@ -25,7 +25,6 @@ class adminPannelState extends State<adminPannel>{
   adminPannelState({this.phonenumber});
   @override
   Widget build(BuildContext context) {
-
     return DefaultTabController(
       initialIndex: widget.selectedPage!,
       length: 4,
@@ -34,17 +33,20 @@ class adminPannelState extends State<adminPannel>{
           child:build_drawer(),
         ),
         appBar:  AppBar(
-          backgroundColor: Colors.deepOrange.shade500,
+          backgroundColor: Colors.deepOrangeAccent.shade400,
           bottom:  PreferredSize(
             preferredSize:  const Size.fromHeight(5),
             child:  ListView(
               shrinkWrap: true,
               children: [ TabBar(
+                automaticIndicatorColorAdjustment: true,
+                unselectedLabelColor: Colors.white,
+                labelColor: Colors.greenAccent,
                 tabs: [
                   Row(
                     children: [
                       Container(
-                         child:  const Tab(child:  Text("Home",style:  const TextStyle(fontFamily: "Poppins-Medium",fontSize: 15)),),
+                         child:  const Tab(child:  Text("Home",style:  const TextStyle(fontFamily: "Poppins",fontSize: 15)),),
                        ),
                     ],
                   ),

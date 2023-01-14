@@ -1,5 +1,3 @@
-// ignore_for_file: camel_case_types
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:growmaxx_admin/Admin/adminPannel.dart';
@@ -28,8 +26,8 @@ class _user_detailsState extends State<user_details> {
               height: 20,
             ),
             Container(
-                margin:
-                    const EdgeInsets.only(top: 14.3, left: 15.3, bottom: 12.3),
+                margin: const EdgeInsets.only(top: 14.3, left: 15.3,
+                    bottom: 12.3),
                 child: InkWell(
                     onTap: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
@@ -39,8 +37,7 @@ class _user_detailsState extends State<user_details> {
                     child: const Icon(
                       Icons.arrow_back_ios_new_outlined,
                       color: Colors.blue,
-                      size: 25,
-                    ))),
+                      size: 25,))),
             Expanded(
               child: SizedBox(
                 child: DefaultTabController(
@@ -111,8 +108,7 @@ class _user_detailsState extends State<user_details> {
                 TextButton(
                     style: TextButton.styleFrom(
                         backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.3)),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.3)),
                         elevation: 0.6),
                     onPressed: () {
                       Navigator.push(context,
@@ -147,7 +143,7 @@ class _user_detailsState extends State<user_details> {
                       Row(
                         mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children:  [
                           Text("Username"),
                           Text("phonenumber"),
                           Text("Status")
@@ -165,8 +161,7 @@ class _user_detailsState extends State<user_details> {
           FutureBuilder<QuerySnapshot>(
               future: users,
               builder: (context, snapshot) {
-                if (snapshot.hasData &&
-                    snapshot.data!.docs.isNotEmpty) {
+                if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                   var details = snapshot.data!.docs;
                   List? inactiveUsers = get_list(details);
                   return ListView(
@@ -187,8 +182,7 @@ class _user_detailsState extends State<user_details> {
                         ),
                       ),
                       Container(
-                        margin: const EdgeInsets.only(
-                            left: 12.3, right: 12.3),
+                        margin: const EdgeInsets.only(left: 12.3, right: 12.3),
                         child: ListView.builder(
                             shrinkWrap: true,
                             physics: BouncingScrollPhysics(),
@@ -196,49 +190,31 @@ class _user_detailsState extends State<user_details> {
                             padding: EdgeInsets.zero,
                             itemBuilder: (context, index) {
                               return Container(
-                                margin: EdgeInsets.only(
-                                    bottom: 8.3),
+                                margin: EdgeInsets.only(bottom: 8.3),
                                 child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment
-                                        .spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                          inactiveUsers[index]
-                                              .get(
-                                              "firstname")
-                                              .toString()),
-                                      Text(inactiveUsers[
-                                      index]
-                                          .get(
-                                          "mobilenumber")),
+                                      Text(inactiveUsers[index].get("firstname").toString()),
+                                      Text(inactiveUsers[index].get("mobilenumber")),
                                       TextButton(
                                           style: TextButton.styleFrom(
-                                              backgroundColor:
-                                              Colors
-                                                  .green,
+                                              backgroundColor: Colors.green,
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(
-                                                      12.3)),
+                                                  borderRadius: BorderRadius.circular(12.3)),
                                               elevation: 0.6),
                                           onPressed: () {
-                                            Navigator.push(
-                                                context,
+                                            Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        Inactive_user(
-                                                          id: inactiveUsers[index].id,
-                                                        )));
+                                                        Inactive_user(id: inactiveUsers[index].id,)));
                                           },
                                           child:  Text("Details", style: TextStyle(
-                                              color: Colors
-                                                  .white, fontSize: 16),
+                                              color: Colors.white, fontSize: 16),
                                           )),
                                     ]),
                               );
                             }),
-                      )
+                      ),
                     ],
                   );
                 }
