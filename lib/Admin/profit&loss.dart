@@ -87,6 +87,10 @@ class _profitState extends State<profit> {
                       count = 0;
                       pressed = false;
                     });
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (BuildContext context) => adminPannel(
+                          selectedPage: 0,
+                        )));
                   }
                 },
                 child: Container(
@@ -189,7 +193,7 @@ class _profitState extends State<profit> {
       String phonenumber = values.docs[i].get("phonenumber");
       double total = 0.0;
       for (int j = 0; j < portfolio.length; j++) {
-        total = total + portfolio[j];
+        total = total + double.parse(portfolio[j]);
       }
       var percentageAmount =
           (total * double.parse(percentageController.text)) / 100;
@@ -226,6 +230,7 @@ class _profitState extends State<profit> {
             "Profit": get_values[i][1],
           };
           await FirebaseFirestore.instance.collection("Profit").add(data);
+
         }
       }
       else {
@@ -234,6 +239,7 @@ class _profitState extends State<profit> {
           "Profit": get_values[i][1],
         };
         await FirebaseFirestore.instance.collection("Profit").add(data);
+
       }
     }
   }
@@ -245,8 +251,8 @@ class _profitState extends State<profit> {
       List portfolio = negative[i][2];
       List data = [];
       for(int j=0;j<portfolio.length;j++){
-        var profit = get_today_profit(portfolio[j]);
-        var minus = (portfolio[j])-profit.abs();
+        var profit = get_today_profit(double.parse(portfolio[j]));
+        var minus = (double.parse(portfolio[j]))-profit.abs();
         data.add(minus);
       }
       List listofvalues=[];
@@ -258,6 +264,7 @@ class _profitState extends State<profit> {
         "Portfolio":listofvalues,
       };
       await FirebaseFirestore.instance.collection("razor_investments").doc(negative[i][0]).update(updatedata);
+
     }
   }
 
@@ -278,12 +285,12 @@ class _profitState extends State<profit> {
         }
       }
     }
+
     return loss;
   }
 
-  get_today_profit(portfolio) {
-    var amount =
-        (portfolio * double.parse(percentageController.text)) / 100;
+  get_today_profit(double portfolio) {
+     double amount = portfolio*(double.parse(percentageController.text))/100;
     return amount;
   }
 }
